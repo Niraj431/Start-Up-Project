@@ -1,0 +1,211 @@
+import random
+       
+def generate_card(laenge,breite,line):
+        card = { 
+
+            } 
+        for x in range(0,laenge):
+            card[str(x+1)]=[random.choices(line,k=breite)]
+        for letter in card:
+            if letter=='2':
+                if laenge==3 & breite==3:
+                    card[letter][0][1] = "X" 
+            elif letter =='3':
+                if laenge==5 & breite==5:
+                    card[letter][0][2] = "X"
+            elif letter=='4':
+                if laenge==7 & breite==7:
+                    card[letter][0][3] = "X"
+       
+        return card
+
+def print_card(card):
+    
+    for letter in card:
+        
+        print('\t')
+        print(letter,end=':\t')
+        print('  '.join(card[letter][0]))
+
+
+def draw(card, line):
+
+    word_drawn = random.choice(line)
+    for letter in card:
+        i = 0
+        for word in card[letter][0]:
+            if word == word_drawn:
+                card[letter][0][i] = "X"
+            i += 1
+            
+    return word_drawn     
+
+def check_win(card,laenge,breite):
+
+    win = False
+    #Zunächst werden die horizontalen Gewinne nachgeprüft
+    
+    for letter in card:
+        cnt=0
+        
+        for x in range(0,int(laenge)):
+
+            if card[letter][0][x]=='X':
+                cnt+=1
+            
+        if cnt==int(laenge):
+            win=True
+            return win
+            
+    #jetzt werden die vertikalen Gewinne nachgeprüft
+    for x in range(0,int(laenge)):
+        cnt=0
+
+        for letter in card:
+           if card[letter][0][x]=='X':
+               cnt+=1
+        if cnt==int(laenge):
+            win=True
+            return win
+
+    #jetzt werden die diagonalen Gewinne nachgeprüft
+    for x in range (0,int(laenge)):
+        y=0
+        cnt=0
+        for letter in card:
+            if card[letter][0][y]=='X':
+                cnt+=1
+            y+=1
+        if cnt==int(laenge):
+            win=True
+            return win
+
+    for x in range (int(laenge),-1,-1):
+        y=int(laenge)-1
+        cnt=0
+        for letter in card:
+            if card[letter][0][y]=='X':
+                cnt+=1
+            y-=1
+        if cnt==int(laenge):
+            win=True
+        return win
+
+
+    
+
+
+datei = open('text.txt','r')
+line=[]
+line = datei.read().split(';')
+laenge=int(input('''
+
+Herzlich Wilkommen zum Bingo-Spieleabend!!
+Zunächst erfassen wir die von ihnen gewünschten Seitenmaße
+für ihre BIngokarten!
+
+Bitte geben Sie die Höhe der Bingokarte ein!'''))
+
+breite=int(input('Bitte geben Sie die Breite der Bingokarte ein.'))
+
+modus=input('''
+Was möchten Sie heute spielen?
+Geben Sie bitte eine der folgenden Ziffern ein!
+
+1: Einzelspieler
+2: Mehrspieler''')
+
+bingo_karten=[]
+
+if modus=='2': 
+    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!')
+    for x in range(0,int(anzahl_spieler)):
+        bingo_karten.append(generate_card(laenge,breite,line))
+
+    for x in range(0,int(anzahl_spieler)):
+        f = open("Karte"+str(x), 'w')
+        card=bingo_karten[x]
+        for letter in card:
+
+                f.write('\n'+letter+':\t|')
+                f.write('|  |'.join(card[letter][0]))
+    print('''
+    Nun beginnt das Spiel!
+    ES wird immer wieder aus einer Liste Wörter gezogen, und wenn diese
+    in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
+
+    ''')
+
+    win=False
+    for x in range(0,int(anzahl_spieler)):
+        print("\nDrücke Enter um ein neues Wort zu ziehen.\nZum Beenden, schribe bitte quit.\n")
+        user_input = input()
+        words_till_win = 0
+
+        while win == False and user_input != "quit":
+            word_drawn = draw(bingo_karten[x], line)
+            words_till_win += 1
+            line.remove(word_drawn)
+            
+
+            print(f"\nGezogenes Wort: {word_drawn}.")
+            print(f"Anzahl an gezogenen Wörtern: {words_till_win}.\n\n\n")
+            
+            user_input=input()
+            if user_input=='quit':
+                print('Vielen Dank fürs Mitspielen!')
+                quit()
+
+    
+    
+    
+if modus=='1':
+    einzelspieler=generate_card(laenge,breite,line)
+    bingo_karten.append(einzelspieler)
+    anzahl_spieler=1
+    for x in range(0,anzahl_spieler):
+        print_card(bingo_karten[x]) 
+    
+else:
+        print(" ")
+        print("Bitte geben Sie die Ziffer 1 für Einzelspieler bzw. 2 für Mehrspieler an!")
+        quit()
+
+
+
+print('''
+    Nun beginnt das Spiel!
+    ES wird immer wieder aus einer Liste Wörter gezogen, und wenn diese
+    in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
+
+    ''')
+
+win=False
+
+
+for x in range(0,int(anzahl_spieler)):
+        print("\nDrücke Enter um ein neues Wort zu ziehen.\nZum Beenden, schribe bitte quit.\n")
+        user_input = input()
+        win=check_win(bingo_karten[x],int(laenge),int(breite))
+        words_till_win = 0
+
+        while win == False and user_input != "quit":
+            word_drawn = draw(bingo_karten[x], line)
+            words_till_win += 1
+            line.remove(word_drawn)
+            
+
+            print(f"\nGezogenes Wort: {word_drawn}.")
+            print(f"Anzahl an gezogenen Wörtern: {words_till_win}.\n")
+            print_card(bingo_karten[x])
+
+            win=check_win(bingo_karten[x],int(laenge),int(breite))
+
+
+            if win==True:
+                print(f"\nHerzlichen Glückwunsch zum Sieg!\nSoviele Wörter wurden bis zum Sieg gezogen: {words_till_win}.")
+            
+            user_input=input()
+            if user_input=='quit':
+                print('Vielen Dank fürs Mitspielen!')
+                quit()
