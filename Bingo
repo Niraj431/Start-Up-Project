@@ -91,31 +91,52 @@ def check_win(card,laenge,breite):
             win=True
         return win
 
-
+#Mainmethode
     
 
 
 datei = open('text.txt','r')
 line=[]
 line = datei.read().split(';')
+
+
+
 laenge=int(input('''
 
-Herzlich Wilkommen zum Bingo-Spieleabend!!
-Zunächst erfassen wir die von ihnen gewünschten Seitenmaße
-für ihre BIngokarten!
+Wilkommen zu Buzzword Bingo!!
+Geben sie als Nächstes die Größe der Spielfelder ein
 
-Bitte geben Sie die Höhe der Bingokarte ein!'''))
+Geben sie die Höhe der Bingokarte ein:''' + "\n"))
 
-breite=int(input('Bitte geben Sie die Breite der Bingokarte ein.'))
-
+breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
 modus=input('''
-Was möchten Sie heute spielen?
-Geben Sie bitte eine der folgenden Ziffern ein!
+Wählen sie zwischen Zwei Spiel Modi aus
+Tippen sie die jeweilige Zahl ein:
 
 1: Einzelspieler
-2: Mehrspieler''')
+2: Mehrspieler''' + "\n")
 
 bingo_karten=[]
+
+
+
+if modus=='1':
+    einzelspieler = generate_card(laenge,breite,line)
+    bingo_karten.append(einzelspieler)
+    anzahl_spieler= 1
+    for x in range(0,anzahl_spieler):
+        print_card(bingo_karten[x]) 
+    
+else:
+        print(" ")
+        print("Bitte geben Sie die Ziffer 1 für Einzelspieler bzw. 2 für Mehrspieler an!")
+        quit()
+
+
+
+
+
+
 
 if modus=='2': 
     anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!')
@@ -158,19 +179,6 @@ if modus=='2':
 
     
     
-    
-if modus=='1':
-    einzelspieler=generate_card(laenge,breite,line)
-    bingo_karten.append(einzelspieler)
-    anzahl_spieler=1
-    for x in range(0,anzahl_spieler):
-        print_card(bingo_karten[x]) 
-    
-else:
-        print(" ")
-        print("Bitte geben Sie die Ziffer 1 für Einzelspieler bzw. 2 für Mehrspieler an!")
-        quit()
-
 
 
 print('''
@@ -196,16 +204,16 @@ for x in range(0,int(anzahl_spieler)):
             
 
             print(f"\nGezogenes Wort: {word_drawn}.")
-            print(f"Anzahl an gezogenen Wörtern: {words_till_win}.\n")
+            print(f"Anzahl der gezogenen Wörtern: {words_till_win}.\n")
             print_card(bingo_karten[x])
 
             win=check_win(bingo_karten[x],int(laenge),int(breite))
 
 
             if win==True:
-                print(f"\nHerzlichen Glückwunsch zum Sieg!\nSoviele Wörter wurden bis zum Sieg gezogen: {words_till_win}.")
+                print(f"\nSieh haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
             
             user_input=input()
             if user_input=='quit':
-                print('Vielen Dank fürs Mitspielen!')
+                print('Spiel wurde beendet')
                 quit()
