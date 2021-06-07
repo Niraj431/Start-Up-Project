@@ -117,40 +117,34 @@ Tippen sie die jeweilige Zahl ein:
 2: Mehrspieler''' + "\n")
 
 bingo_karten=[]
+zustand = True
+while zustand == True:
+    if modus=='1':
+        einzelspieler = generate_card(höhe,breite,line)
+        bingo_karten.append(einzelspieler)
+        anzahl_spieler= 1
+        for x in range(0,anzahl_spieler):
+            print_card(bingo_karten[x])
+        break
+        if modus != '1' or '2':
+            zustand == False
+            
+    elif modus=='2': 
+        anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!')
+        for x in range(0,int(anzahl_spieler)):
+            bingo_karten.append(generate_card(höhe,breite,line))
+
+        for x in range(0,int(anzahl_spieler)):
+            f = open("Karte"+str(x), 'w')
+            card=bingo_karten[x]
+            for letter in card:
+
+                    f.write(letter+':\t|')
+                    f.write('|  |'.join(card[letter][0]))
 
 
-
-if modus=='1':
-    einzelspieler = generate_card(höhe,breite,line)
-    bingo_karten.append(einzelspieler)
-    anzahl_spieler= 1
-    for x in range(0,anzahl_spieler):
-        print_card(bingo_karten[x]) 
     
-else:
-        print(" ")
-        print("Bitte geben Sie die Ziffer 1 für Einzelspieler bzw. 2 für Mehrspieler an!")
-        quit()
-
-
-
-
-
-
-
-if modus=='2': 
-    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!')
-    for x in range(0,int(anzahl_spieler)):
-        bingo_karten.append(generate_card(höhe,breite,line))
-
-    for x in range(0,int(anzahl_spieler)):
-        f = open("Karte"+str(x), 'w')
-        card=bingo_karten[x]
-        for letter in card:
-
-                f.write(letter+':\t|')
-                f.write('|  |'.join(card[letter][0]))
-    print('''
+        print('''
     Nun beginnt das Spiel!
     ES wird immer wieder aus einer Liste Wörter gezogen, und wenn diese
     in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
