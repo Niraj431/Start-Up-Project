@@ -91,6 +91,16 @@ def check_win(card,höhe,breite):
             win=True
         return win
 
+
+def restart():
+    import sys
+    print("argv was",sys.argv)
+    print("sys.executable was", sys.executable)
+    print("restart now")
+
+    import os
+    os.execv(sys.executable, ['python'] + sys.argv) 
+
 #Mainmethode
     
 
@@ -109,51 +119,43 @@ Geben sie als Nächstes die Größe der Spielfelder ein
 Geben sie die Höhe der Bingokarte ein:''' + "\n"))
 
 breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
-modus=input('''
+modus=int(input('''
 Wählen sie zwischen Zwei Spiel Modi aus
 Tippen sie die jeweilige Zahl ein:
 
 1: Einzelspieler
-2: Mehrspieler''' + "\n")
-def restart():
-        import sys
-        print("argv was",sys.argv)
-        print("sys.executable was", sys.executable)
-        print("restart now")
+2: Mehrspieler''' + "\n"))
 
-        import os
-        os.execv(sys.executable, ['python'] + sys.argv)
-
-if modus != '1' or '2':
-    print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
-    print("Das Spiel wird neugestartet" + "\n")
-    restart()
 
 bingo_karten=[]
-zustand = True
-while zustand == True:
-    if modus=='1':
-        einzelspieler = generate_card(höhe,breite,line)
-        bingo_karten.append(einzelspieler)
-        anzahl_spieler= 1
-        for x in range(0,anzahl_spieler):
-            print_card(bingo_karten[x])
-        break
-        if modus != '1' or '2':
-            zustand == False
+
+if modus >= 3:
+
+    print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
+    print("Das Spiel wird neugestartet" + "\n")
+    restart() 
+
+
+elif modus==1:
+    einzelspieler = generate_card(höhe,breite,line)
+    bingo_karten.append(einzelspieler)
+    anzahl_spieler= 1
+    for x in range(0,anzahl_spieler):
+        print_card(bingo_karten[x])
+    
             
-    elif modus=='2': 
-        anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!')
-        for x in range(0,int(anzahl_spieler)):
-            bingo_karten.append(generate_card(höhe,breite,line))
+elif modus==2: 
+    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!')
+    for x in range(0,int(anzahl_spieler)):
+        bingo_karten.append(generate_card(höhe,breite,line))
 
-        for x in range(0,int(anzahl_spieler)):
-            f = open("Karte"+str(x), 'w')
-            card=bingo_karten[x]
-            for letter in card:
+    for x in range(0,int(anzahl_spieler)):
+        f = open("Karte"+str(x), 'w')
+        card=bingo_karten[x]
+        for letter in card:
 
-                    f.write(letter+':\t|')
-                    f.write('|  |'.join(card[letter][0]))
+                f.write(letter+':\t|')
+                f.write('|  |'.join(card[letter][0]))
 
 
     
