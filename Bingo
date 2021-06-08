@@ -120,12 +120,21 @@ Geben sie als Nächstes die Größe der Spielfelder ein
 Geben sie die Höhe der Bingokarte ein:''' + "\n"))
 
 breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
-modus=int(input('''
-Wählen sie zwischen Zwei Spiel Modi aus
-Tippen sie die jeweilige Zahl ein:
 
-1: Einzelspieler
-2: Mehrspieler''' + "\n"))
+while True:
+    try:
+         modus = int(input('''
+    Wählen sie zwischen Zwei Spiel Modi aus
+    Tippen sie die jeweilige Zahl ein:
+
+    1: Einzelspieler
+    2: Mehrspieler''' + "\n"))
+         break
+        
+    except ValueError:
+        print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
+        print("Das Spiel wird neugestartet" + "\n")
+        restart() 
 
 
 bingo_karten=[]
@@ -144,7 +153,8 @@ elif modus==1:
     bingo_karten.append(einzelspieler)
     anzahl_spieler= 1
     for x in range(0,anzahl_spieler):
-        print_card(bingo_karten[x])   
+        print_card(bingo_karten[x])
+    
             
 elif modus==2: 
     anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!')
@@ -187,16 +197,6 @@ elif modus==2:
             if user_input=='quit':
                 print('Vielen Dank fürs Mitspielen!')
                 quit()
-elif modus != 1 or 2:
-
-    print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
-    print("Das Spiel wird neugestartet" + "\n")
-    restart() 
-elif modus == str:
-
-    print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
-    print("Das Spiel wird neugestartet" + "\n")
-    restart() 
 
     
     
@@ -238,3 +238,5 @@ for x in range(0,int(anzahl_spieler)):
             if user_input=='quit':
                 print('Spiel wurde beendet')
                 quit()
+
+
