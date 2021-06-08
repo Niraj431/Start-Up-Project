@@ -63,8 +63,8 @@ def check_win(card,höhe,breite):
         cnt=0
 
         for letter in card:
-           if card[letter][0][x]=='X':
-               cnt+=1
+            if card[letter][0][x]=='X':
+                cnt+=1
         if cnt==int(höhe):
             win=True
             return win
@@ -115,7 +115,7 @@ line = datei.read().split(';')
 höhe=int(input('''
 
 Wilkommen zu Buzzword Bingo!!
-Geben sie als Nächstes die Größe der Spielfelder ein
+Geben sie die Größe der Spielfelder ein
 
 Geben sie die Höhe der Bingokarte ein:''' + "\n"))
 
@@ -123,13 +123,13 @@ breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
 
 while True:
     try:
-         modus = int(input('''
+        modus = int(input('''
     Wählen sie zwischen Zwei Spiel Modi aus
     Tippen sie die jeweilige Zahl ein:
 
     1: Einzelspieler
     2: Mehrspieler''' + "\n"))
-         break
+        break
         
     except ValueError:
         print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
@@ -139,16 +139,7 @@ while True:
 
 bingo_karten=[]
 
-
-if modus >= 3:
-
-    print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
-    print("Das Spiel wird neugestartet" + "\n")
-    restart() 
-
-
-
-elif modus==1:
+if modus==1:
     einzelspieler = generate_card(höhe,breite,line)
     bingo_karten.append(einzelspieler)
     anzahl_spieler= 1
@@ -197,8 +188,10 @@ elif modus==2:
             if user_input=='quit':
                 print('Vielen Dank fürs Mitspielen!')
                 quit()
-
-    
+elif modus != 1 or 2:
+    print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
+    print("Das Spiel wird neugestartet" + "\n")
+    restart() 
     
 
 
@@ -238,5 +231,3 @@ for x in range(0,int(anzahl_spieler)):
             if user_input=='quit':
                 print('Spiel wurde beendet')
                 quit()
-
-
