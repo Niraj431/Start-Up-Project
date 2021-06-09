@@ -97,9 +97,12 @@ def check_win(card,höhe,breite):
 
 
 def restart():
-    print("Spiel startet neu aufgrund von einem Fehlinput" + "\n" + "------------------------" + "\n")
+    print("Spiel startet neu aufgrund von eines FehlInputs" + "\n" + "------------------------" + "\n")
     os.execv(sys.executable, ['python'] + sys.argv) 
-
+def restarthöhebreite():
+    print("Spiel startet neu aufgrund von eines FehlInputs")
+    print("Bitte geben sie nur 3 x 3, 5 x 5, 7 x 7 ein" + "\n" + "------------------------" + "\n")
+    os.execv(sys.executable, ['python'] + sys.argv) 
 
 
 #Mainmethode
@@ -113,8 +116,11 @@ while True:
     try:
         höhe=int(input("\n" + "Wilkommen zu Buzzword Bingo! "+ "\n" + "Geben sie die Höhe der Bingokarte ein:" + "\n"))
         breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
-        break
-        
+        acceptable_values = list((3, 5, 7))
+        if höhe and breite in acceptable_values and höhe == breite:
+          break
+        else:
+           restarthöhebreite()
     except ValueError:
         print("\n" + "Bitte geben Sie NUR die Ziffern ein. Versuchen sie es erneut")
         print("Das Spiel wird neugestartet" + "\n")
@@ -131,7 +137,6 @@ while True:
         
     except ValueError:
         print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein und kein Buchstabe. Versuchen sie es erneut")
-        print("Das Spiel wird neugestartet" + "\n")
         restart() 
 
 #################
