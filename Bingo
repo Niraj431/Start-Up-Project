@@ -109,7 +109,16 @@ line=[]
 line = datei.read().split(';')
 
 #Fehlererkennung bei Userinput#
-
+while True:
+    try:
+        höhe=int(input("\n" + "Wilkommen zu Buzzword Bingo! "+ "\n" + "Geben sie die Höhe der Bingokarte ein:" + "\n"))
+        breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
+        break
+        
+    except ValueError:
+        print("\n" + "Bitte geben Sie NUR die Ziffern ein. Versuchen sie es erneut")
+        print("Das Spiel wird neugestartet" + "\n")
+        restart()
 
 while True:
     try:
