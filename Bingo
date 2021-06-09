@@ -122,9 +122,6 @@ while True:
 
 while True:
     try:
-        höhe=int(input('''Wilkommen zu Buzzword Bingo!''' + "\n" '''Geben sie die Höhe der Bingokarte ein:''' + "\n"))
-        breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
-         
         modus = int(input('''Wählen sie zwischen Zwei Spiel Modi aus Tippen sie die jeweilige Zahl ein:
         
 1: Einzelspieler
