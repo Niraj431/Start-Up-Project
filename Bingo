@@ -1,4 +1,7 @@
 import random
+import sys
+import os
+
 
        
 def generate_card(höhe,breite,line):
@@ -94,12 +97,7 @@ def check_win(card,höhe,breite):
 
 
 def restart():
-    import sys
-    #print(sys.argv)
-    #print(sys.executable)
-    print("Spiel startet neu aufgrund von einem Misinput" + "\n" + "------------------------" + "\n")
-
-    import os
+    print("Spiel startet neu aufgrund von einem Fehlinput" + "\n" + "------------------------" + "\n")
     os.execv(sys.executable, ['python'] + sys.argv) 
 
 
