@@ -1,0 +1,255 @@
+import random
+import sys
+import os
+import msvcrt
+import time
+
+
+       
+def generate_card(höhe,breite,line):
+        card = { 
+
+            } 
+        for x in range(0,höhe):
+            card[str(x+1)]=[random.choices(line,k=breite)]
+        for letter in card:
+            if letter=='2':
+                if höhe==3 & breite==3:
+                    card[letter][0][1] = "X" 
+            elif letter =='3':
+                if höhe==5 & breite==5:
+                    card[letter][0][2] = "X"
+            elif letter=='4':
+                if höhe==7 & breite==7:
+                    card[letter][0][3] = "X"
+       
+        return card
+
+def print_card(card):
+    
+    for letter in card:
+        
+        print('\t')
+        print(letter,end=':\t')
+        print('  '.join(card[letter][0]))
+
+
+def draw(card, line):
+
+    word_drawn = random.choice(line)
+    for letter in card:
+        i = 0
+        for word in card[letter][0]:
+            if word == word_drawn:
+                card[letter][0][i] = "X"
+            i += 1
+            
+    return word_drawn     
+
+def check_win(card,höhe,breite):
+
+    win = False
+    #Zunächst werden die horizontalen Gewinne nachgeprüft
+    
+    for letter in card:
+        cnt=0
+        
+        for x in range(0,int(höhe)):
+
+            if card[letter][0][x]=='X':
+                cnt+=1
+            
+        if cnt==int(höhe):
+            win=True
+            return win
+            
+    #jetzt werden die vertikalen Gewinne nachgeprüft
+    for x in range(0,int(höhe)):
+        cnt=0
+
+        for letter in card:
+            if card[letter][0][x]=='X':
+                cnt+=1
+        if cnt==int(höhe):
+            win=True
+            return win
+
+    #jetzt werden die diagonalen Gewinne nachgeprüft
+    for x in range (0,int(höhe)):
+        y=0
+        cnt=0
+        for letter in card:
+            if card[letter][0][y]=='X':
+                cnt+=1
+            y+=1
+        if cnt==int(höhe):
+            win=True
+            return win
+
+    for x in range (int(höhe),-1,-1):
+        y=int(höhe)-1
+        cnt=0
+        for letter in card:
+            if card[letter][0][y]=='X':
+                cnt+=1
+            y-=1
+        if cnt==int(höhe):
+            win=True
+        return win
+
+
+def restart():
+    print("Spiel startet neu aufgrund von einem Fehlinput" + "\n" + "------------------------" + "\n")
+    os.execv(sys.executable, ['python'] + sys.argv) 
+
+
+
+#Mainmethode
+    
+datei = open('text.txt','r')
+line=[]
+line = datei.read().split(';')
+
+#Fehlererkennung bei Userinput#
+while True:
+    try:
+        höhe=int(input("\n" + "Wilkommen zu Buzzword Bingo! "+ "\n" + "Geben sie die Höhe der Bingokarte ein:" + "\n"))
+        breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
+        break
+        
+    except ValueError:
+        print("\n" + "Bitte geben Sie NUR die Ziffern ein. Versuchen sie es erneut")
+        print("Das Spiel wird neugestartet" + "\n")
+        restart()
+
+while True:
+    try:
+        höhe=int(input('''Wilkommen zu Buzzword Bingo!''' + "\n" '''Geben sie die Höhe der Bingokarte ein:''' + "\n"))
+        breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
+         
+        modus = int(input('''Wählen sie zwischen Zwei Spiel Modi aus Tippen sie die jeweilige Zahl ein:
+        
+1: Einzelspieler
+2: Mehrspieler''' + "\n"))
+
+        break
+        
+    except ValueError:
+        print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein und kein Buchstabe. Versuchen sie es erneut")
+        print("Das Spiel wird neugestartet" + "\n")
+        restart() 
+
+#################
+
+bingo_karten=[]
+
+
+if modus==1:
+    einzelspieler = generate_card(höhe,breite,line)
+    bingo_karten.append(einzelspieler)
+    anzahl_spieler= 1
+    for x in range(0,anzahl_spieler):
+        print_card(bingo_karten[x])   
+            
+elif modus==2: 
+    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
+    for x in range(0,int(anzahl_spieler)):
+        bingo_karten.append(generate_card(höhe,breite,line))
+
+    for x in range(0,int(anzahl_spieler)):
+        f = open("Karte"+str(x), 'w')
+        card=bingo_karten[x]
+        for letter in card:
+
+                f.write(letter+':\t|')
+                f.write('|  |'.join(card[letter][0]))
+
+
+    
+    print('''
+Nun beginnt das Spiel!
+ES wird immer wieder aus einer Liste Wörter gezogen, und wenn diese
+in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
+
+    ''')
+
+    win=False
+    for x in range(0,int(anzahl_spieler)):
+        print("\nDrücke Enter um ein neues Wort zu ziehen.\nZum Beenden, schribe bitte quit.\n")
+        user_input = input()
+        words_till_win = 0
+
+        while win == False and user_input != "quit":
+            word_drawn = draw(bingo_karten[x], line)
+            words_till_win += 1
+            line.remove(word_drawn)
+            
+
+            print(f"\nGezogenes Wort: {word_drawn}.")
+            print(f"Anzahl an gezogenen Wörtern: {words_till_win}.\n\n\n")
+            
+            user_input=input()
+            if user_input=='quit':
+                print('Vielen Dank fürs Mitspielen!')
+                quit()
+
+
+elif modus != 1 or 2:
+
+    print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
+    print("Das Spiel wird neugestartet" + "\n")
+    restart() 
+
+
+    
+
+print('''
+    Nun beginnt das Spiel!
+    ES wird immer wieder aus einer Liste Wörter gezogen, und wenn diese
+    in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
+
+    ''')
+
+win=False
+
+
+for x in range(0,int(anzahl_spieler)):
+        print("\nDrücke Enter um ein neues Wort zu ziehen.\nZum Beenden, schribe bitte quit.\n")
+        user_input = input()
+        win=check_win(bingo_karten[x],int(höhe),int(breite))
+        words_till_win = 0
+
+        while win == False and user_input != "quit":
+            word_drawn = draw(bingo_karten[x], line)
+            words_till_win += 1
+            line.remove(word_drawn)
+            
+
+            print(f"\nGezogenes Wort: {word_drawn}.")
+            print(f"Anzahl der gezogenen Wörtern: {words_till_win}.\n")
+            print_card(bingo_karten[x])
+
+            win=check_win(bingo_karten[x],int(höhe),int(breite))
+
+
+            if win==True:
+                print(f"\nSieh haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
+            
+            aborted = False
+
+            for time_remaining in range(10,0,-1):
+                # First of all, check if ESCape was pressed
+                if msvcrt.kbhit() and msvcrt.getch()==chr(27):
+                    aborted = True
+                    break
+            
+                print(str(time_remaining))       # so I can see loop is working
+                time.sleep(1)                    # delay for 1 second
+            #endfor timing loop
+            
+            if aborted:
+                print("Program was aborted")
+            else:
+                print("Program was not aborted")
+            
+            time.sleep(5)
