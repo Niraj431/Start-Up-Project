@@ -151,32 +151,81 @@ if modus==1:
     for x in range(0,anzahl_spieler):
         print_card(bingo_karten[x])
         card = bingo_karten[x]
-        for letter in card(höhe, breite):
-            print("Geben sie an welches Wort sie streichen wollen")
-        if letter=='1':
-                if höhe==3 & breite==3:
-                   if selected:
-                      card[letter][0][0] = "X"
-                      card[letter][0][1] = "X"
-                      card[letter][0][2] = "X"
-                   if höhe==5 & breite==5:
-                       if selected:
-                          card[letter][0][0] = "X"
-                          card[letter][0][1] = "X"
-                          card[letter][0][2] = "X"
-                          card[letter][0][3] = "X"
-                          card[letter][0][4] = "X"
-                   if höhe==5 & breite==5:
-                       if selected:
-                          card[letter][0][0] = "X"
-                          card[letter][0][1] = "X"
-                          card[letter][0][2] = "X"
-                          card[letter][0][3] = "X"
-                          card[letter][0][4] = "X"
-                          win=check_win(bingo_karten[x],int(höhe),int(breite))
+        for letter in card:
+            for i in range(0,anzahl_spieler):
+                selected = "X"
+            for word in card[letter][0]:
+                        if word == word_drawn:
+                            card[letter][0][i] = "X"
+                    if letter=='1':
+                                if höhe==3 & breite==3:
+                                   if selected == word:
+                                      card[letter][0][0] = "X"
+                                      card[letter][0][1] = "X"
+                                      card[letter][0][2] = "X"
+                                   if höhe==5 & breite==5:
+                                       if selected == word:
+                                          card[letter][0][0] = "X"
+                                          card[letter][0][1] = "X"
+                                          card[letter][0][2] = "X"
+                                          card[letter][0][3] = "X"
+                                          card[letter][0][4] = "X"
+                                   if höhe==7 & breite==7:
+                                       if selected == word:
+                                          card[letter][0][0] = "X"
+                                          card[letter][0][1] = "X"
+                                          card[letter][0][2] = "X"
+                                          card[letter][0][3] = "X"
+                                          card[letter][0][4] = "X"
+                                          card[letter][0][5] = "X"
+                                          card[letter][0][6] = "X"
+                    if letter=='2':
+                                if höhe==3 & breite==3:
+                                   if selected == word:
+                                      card[letter][0][0] = "X"
+                                      card[letter][0][1] = "X"
+                                      card[letter][0][2] = "X"
+                                   if höhe==5 & breite==5:
+                                       if selected == word:
+                                          card[letter][0][0] = "X"
+                                          card[letter][0][1] = "X"
+                                          card[letter][0][2] = "X"
+                                          card[letter][0][3] = "X"
+                                          card[letter][0][4] = "X"
+                                   if höhe==7 & breite==7:
+                                       if selected == word:
+                                          card[letter][0][0] = "X"
+                                          card[letter][0][1] = "X"
+                                          card[letter][0][2] = "X"
+                                          card[letter][0][3] = "X"
+                                          card[letter][0][4] = "X"
+                                          card[letter][0][5] = "X"
+                                          card[letter][0][6] = "X"
+                                          win=check_win(bingo_karten[x],int(höhe),int(breite))
+                    if letter=='3':
+                                if höhe==3 & breite==3:
+                                   if selected == word:
+                                      card[letter][0][0] = "X"
+                                      card[letter][0][1] = "X"
+                                      card[letter][0][2] = "X"
+                                   if höhe==5 & breite==5:
+                                       if selected == word:
+                                          card[letter][0][0] = "X"
+                                          card[letter][0][1] = "X"
+                                          card[letter][0][2] = "X"
+                                          card[letter][0][3] = "X"
+                                          card[letter][0][4] = "X"
+                                   if höhe==7 & breite==7:
+                                       if selected == word:
+                                          card[letter][0][0] = "X"
+                                          card[letter][0][1] = "X"
+                                          card[letter][0][2] = "X"
+                                          card[letter][0][3] = "X"
+                                          card[letter][0][4] = "X"
+                                          card[letter][0][5] = "X"
+                                          card[letter][0][6] = "X"
          
         
-            
 elif modus==2: 
     anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
     for x in range(0,int(anzahl_spieler)):
@@ -240,10 +289,28 @@ win=False
 
 
 for x in range(0,int(anzahl_spieler)):
-        card=bingo_karten[x]
-        if win==True:
+        print("\nDrücke Enter um ein neues Wort zu ziehen.\nZum Beenden, schribe bitte quit.\n")
+        user_input = input()
+        win=check_win(bingo_karten[x],int(höhe),int(breite))
+        words_till_win = 0
+
+        while win == False and user_input != "quit":
+            word_drawn = draw(bingo_karten[x], line)
+            words_till_win += 1
+            line.remove(word_drawn)
+            
+
+            print(f"\nGezogenes Wort: {word_drawn}.")
+            print(f"Anzahl der gezogenen Wörtern: {words_till_win}.\n")
+            print_card(bingo_karten[x])
+
+            win=check_win(bingo_karten[x],int(höhe),int(breite))
+
+
+            if win==True:
                 print(f"\nSieh haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
-        user_input=input()
-        if user_input=='quit':
-          print('Spiel wurde beendet')
-          quit()
+            
+            user_input=input()
+            if user_input=='quit':
+                print('Spiel wurde beendet')
+                quit()
