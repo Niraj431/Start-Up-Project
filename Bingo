@@ -4,96 +4,96 @@ import os
 
 
        
-def generate_card(höhe,breite,line):
-        card = { 
+def Karte_Erstellen(höhe,breite,liste):
+        Karte = { 
 
             } 
         for x in range(0,höhe):
-            card[str(x+1)]=[random.choices(line,k=breite)]
-        for letter in card:
-            if letter=='2':
+            Karte[str(x+1)]=[random.choices(liste,k=breite)]
+        for Zahl in Karte:
+            if Zahl=='2':
                 if höhe==3 & breite==3:
-                    card[letter][0][1] = "X" 
-            elif letter =='3':
+                    Karte[Zahl][0][1] = "X" 
+            elif Zahl =='3':
                 if höhe==5 & breite==5:
-                    card[letter][0][2] = "X"
-            elif letter=='4':
+                    Karte[Zahl][0][2] = "X"
+            elif Zahl=='4':
                 if höhe==7 & breite==7:
-                    card[letter][0][3] = "X"
+                    Karte[Zahl][0][3] = "X"
        
-        return card
+        return Karte
 
-def print_card(card):
+def Karte_Ausgeben(Karte):
     
-    for letter in card:
+    for Zahl in Karte:
         
         print('\t')
-        print(letter,end=':\t')
-        print('  '.join(card[letter][0]))
+        print(Zahl,end=':\t')
+        print('  '.join(Karte[Zahl][0]))
 
 
-def draw(card, line):
+def gezogenes_wort(Karte, liste):
 
-    word_drawn = random.choice(line)
-    for letter in card:
+    wort_ziehen = random.choice(liste)
+    for Zahl in Karte:
         i = 0
-        for word in card[letter][0]:
-            if word == word_drawn:
-                card[letter][0][i] = "X"
+        for word in Karte[Zahl][0]:
+            if word == wort_ziehen:
+                Karte[Zahl][0][i] = "X"
             i += 1
             
-    return word_drawn     
+    return wort_ziehen     
 
-def check_win(card,höhe,breite):
+def Prüfen(Karte,höhe,breite):
 
-    win = False
+    sieg = False
     #Zunächst werden die horizontalen Gewinne nachgeprüft
     
-    for letter in card:
-        cnt=0
+    for Zahl in Karte:
+        counter=0
         
         for x in range(0,int(höhe)):
 
-            if card[letter][0][x]=='X':
-                cnt+=1
+            if Karte[Zahl][0][x]=='X':
+                counter+=1
             
-        if cnt==int(höhe):
-            win=True
-            return win
+        if counter==int(höhe):
+            sieg=True
+            return sieg
             
     #jetzt werden die vertikalen Gewinne nachgeprüft
     for x in range(0,int(höhe)):
-        cnt=0
+        counter=0
 
-        for letter in card:
-            if card[letter][0][x]=='X':
-                cnt+=1
-        if cnt==int(höhe):
-            win=True
-            return win
+        for Zahl in Karte:
+            if Karte[Zahl][0][x]=='X':
+                counter+=1
+        if counter==int(höhe):
+            sieg=True
+            return sieg
 
     #jetzt werden die diagonalen Gewinne nachgeprüft
     for x in range (0,int(höhe)):
         y=0
-        cnt=0
-        for letter in card:
-            if card[letter][0][y]=='X':
-                cnt+=1
+        counter=0
+        for Zahl in Karte:
+            if Karte[Zahl][0][y]=='X':
+                counter+=1
             y+=1
-        if cnt==int(höhe):
-            win=True
-            return win
+        if counter==int(höhe):
+            sieg=True
+            return sieg
 
     for x in range (int(höhe),-1,-1):
         y=int(höhe)-1
-        cnt=0
-        for letter in card:
-            if card[letter][0][y]=='X':
-                cnt+=1
+        counter=0
+        for Zahl in Karte:
+            if Karte[Zahl][0][y]=='X':
+                counter+=1
             y-=1
-        if cnt==int(höhe):
-            win=True
-        return win
+        if counter==int(höhe):
+            sieg=True
+        return sieg
 
 
 def restart():
@@ -108,8 +108,8 @@ def restarthöhebreite():
 #Mainmethode
     
 datei = open('text.txt','r')
-line=[]
-line = datei.read().split(';')
+liste=[]
+liste = datei.read().split(';')
 
 #Fehlererkennung bei Userinput#
 while True:
@@ -118,9 +118,9 @@ while True:
         breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
         acceptable_values = list((3, 5, 7))
         if höhe and breite in acceptable_values and höhe == breite:
-          break
+            break
         else:
-           restarthöhebreite()
+            restarthöhebreite()
     except ValueError:
         print("\n" + "Bitte geben Sie NUR die Ziffern ein. Versuchen sie es erneut")
         print("Das Spiel wird neugestartet" + "\n")
@@ -128,7 +128,7 @@ while True:
 
 while True:
     try:
-        modus = int(input('''Wählen sie zwischen Zwei Spiel Modi aus Tippen sie die jeweilige Zahl ein:
+        modi = int(input('''Wählen sie zwischen Zwei Spiel Modi aus Tippen sie die jeweilige Zahl ein:
         
 1: Einzelspieler
 2: Mehrspieler''' + "\n"))
@@ -141,28 +141,28 @@ while True:
 
 #################
 
-bingo_karten=[]
+spielfeld=[]
 
 
-if modus==1:
-    einzelspieler = generate_card(höhe,breite,line)
-    bingo_karten.append(einzelspieler)
-    anzahl_spieler= 1
+if modi==1:
+    einzelspieler = Karte_Erstellen(höhe,breite,liste)
+    spielfeld.append(einzelspieler)
+    anzahl_spieler = 1
     for x in range(0,anzahl_spieler):
-        print_card(bingo_karten[x])   
+        Karte_Ausgeben(spielfeld[x])   
             
-elif modus==2: 
+elif modi==2: 
     anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
     for x in range(0,int(anzahl_spieler)):
-        bingo_karten.append(generate_card(höhe,breite,line))
+        spielfeld.append(Karte_Erstellen(höhe,breite,liste))
 
     for x in range(0,int(anzahl_spieler)):
         f = open("Karte"+str(x), 'w')
-        card=bingo_karten[x]
-        for letter in card:
+        Karte=spielfeld[x]
+        for Zahl in Karte:
 
-                f.write(letter+':\t|')
-                f.write('|  |'.join(card[letter][0]))
+                f.write(Zahl+':\t|')
+                f.write('|  |'.join(Karte[Zahl][0]))
 
 
     
@@ -173,19 +173,19 @@ in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
 
     ''')
 
-    win=False
+    sieg=False
     for x in range(0,int(anzahl_spieler)):
         print("\nDrücke Enter um ein neues Wort zu ziehen.\nZum Beenden, schribe bitte quit.\n")
         user_input = input()
         words_till_win = 0
 
-        while win == False and user_input != "quit":
-            word_drawn = draw(bingo_karten[x], line)
+        while sieg == False and user_input != "quit":
+            wort_ziehen = gezogenes_wort(spielfeld[x], liste)
             words_till_win += 1
-            line.remove(word_drawn)
+            liste.remove(wort_ziehen)
             
 
-            print(f"\nGezogenes Wort: {word_drawn}.")
+            print(f"\nGezogenes Wort: {wort_ziehen}.")
             print(f"Anzahl an gezogenen Wörtern: {words_till_win}.\n\n\n")
             
             user_input=input()
@@ -194,7 +194,7 @@ in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
                 quit()
 
 
-elif modus != 1 or 2:
+elif modi != 1 or 2:
 
     print("\n" + "Bitte geben Sie NUR die Ziffern 1 oder 2 ein. Versuchen sie es erneut")
     print("Das Spiel wird neugestartet" + "\n")
@@ -210,29 +210,29 @@ print('''
 
     ''')
 
-win=False
+sieg=False
 
 
 for x in range(0,int(anzahl_spieler)):
         print("\nDrücke Enter um ein neues Wort zu ziehen.\nZum Beenden, schribe bitte quit.\n")
         user_input = input()
-        win=check_win(bingo_karten[x],int(höhe),int(breite))
+        sieg=Prüfen(spielfeld[x],int(höhe),int(breite))
         words_till_win = 0
 
-        while win == False and user_input != "quit":
-            word_drawn = draw(bingo_karten[x], line)
+        while sieg == False and user_input != "quit":
+            wort_ziehen = gezogenes_wort(spielfeld[x], liste)
             words_till_win += 1
-            line.remove(word_drawn)
+            liste.remove(wort_ziehen)
             
 
-            print(f"\nGezogenes Wort: {word_drawn}.")
+            print(f"\nGezogenes Wort: {wort_ziehen}.")
             print(f"Anzahl der gezogenen Wörtern: {words_till_win}.\n")
-            print_card(bingo_karten[x])
+            Karte_Ausgeben(spielfeld[x])
 
-            win=check_win(bingo_karten[x],int(höhe),int(breite))
+            sieg=Prüfen(spielfeld[x],int(höhe),int(breite))
 
 
-            if win==True:
+            if sieg==True:
                 print(f"\nSieh haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
             
             user_input=input()
