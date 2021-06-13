@@ -12,13 +12,13 @@ def Karte_Erstellen(höhe,breite,liste):
             Karte[str(x+1)]=[random.choices(liste,k=breite)]
         for Zahl in Karte:
             if Zahl=='2':
-                if höhe==3 & breite==3:
+                if höhe==3 and breite==3:
                     Karte[Zahl][0][1] = "X" 
             elif Zahl =='3':
-                if höhe==5 & breite==5:
+                if höhe==5 and breite==5:
                     Karte[Zahl][0][2] = "X"
             elif Zahl=='4':
-                if höhe==7 & breite==7:
+                if höhe==7 and breite==7:
                     Karte[Zahl][0][3] = "X"
        
         return Karte
@@ -36,11 +36,11 @@ def gezogenes_wort(Karte, liste):
 
     wort_ziehen = random.choice(liste)
     for Zahl in Karte:
-        i = 0
-        for word in Karte[Zahl][0]:
-            if word == wort_ziehen:
-                Karte[Zahl][0][i] = "X"
-            i += 1
+        y = 0
+        for wort in Karte[Zahl][0]:
+            if wort == wort_ziehen:
+                Karte[Zahl][0][y] = "X"
+            y += 1
             
     return wort_ziehen     
 
@@ -50,15 +50,13 @@ def Prüfen(Karte,höhe,breite):
     #Zunächst werden die horizontalen Gewinne nachgeprüft
     
     for Zahl in Karte:
-        counter=0
-        
+        counter = 0   
         for x in range(0,int(höhe)):
-
             if Karte[Zahl][0][x]=='X':
-                counter+=1
+                counter+= 1
             
-        if counter==int(höhe):
-            sieg=True
+        if counter is int(höhe):
+            sieg = True
             return sieg
             
     #jetzt werden die vertikalen Gewinne nachgeprüft
@@ -106,7 +104,20 @@ def restarthöhebreite():
 
 
 #Mainmethode
-    
+print("""
+     ________    _______________
+    |   ___  \\  /              /
+    |  |   \\  |/              /\\
+    |  |   |  |__  ___     __/ _\\____   ______
+    |  |__/  /|  |/   \\   |  |/  ____\\ /  __  \\
+    |   __  < |  |     \\  |  |  |     |  |  |  |
+    |  |  \\  \\|  |  |\\  \\ |  |  |  ___|  |  |  |
+    |  |   |  |  |  | \\  \\|  |  | /_  |  |  |  |
+    |  |___/  |  |  |  \\     |  |__/  |  |__|  |
+    |________/|__|\\_|  /\\___/ \\______/\\\\______/
+      /               /\\               \\
+     /______GAME_____/OF\\____NUMBERS____\\
+""")   
 datei = open('text.txt','r')
 liste=[]
 liste = datei.read().split(';')
@@ -114,7 +125,7 @@ liste = datei.read().split(';')
 #Fehlererkennung bei Userinput#
 while True:
     try:
-        höhe=int(input("\n" + "Wilkommen zu Buzzword Bingo! "+ "\n" + "Geben sie die Höhe der Bingokarte ein:" + "\n"))
+        höhe=int(input("\n" + "Wilkommen zum Buzzigsten Buzzword Bingo! Entwickelt von Fuat, Duc und Niraj "+ "\n" + "Geben sie die Höhe der Bingokarte ein:" + "\n"))
         breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
         acceptable_values = list((3, 5, 7))
         if höhe and breite in acceptable_values and höhe == breite:
@@ -144,20 +155,20 @@ while True:
 spielfeld=[]
 
 
-if modi==1:
+if modi == 1:
     einzelspieler = Karte_Erstellen(höhe,breite,liste)
     spielfeld.append(einzelspieler)
     anzahl_spieler = 1
     for x in range(0,anzahl_spieler):
         Karte_Ausgeben(spielfeld[x])   
             
-elif modi==2: 
-    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
+elif modi == 2: 
+    anzahl_spieler=input('Wie viele Personen sollen am Bingospiel teilnehmen?'+ "\n")
     for x in range(0,int(anzahl_spieler)):
         spielfeld.append(Karte_Erstellen(höhe,breite,liste))
 
     for x in range(0,int(anzahl_spieler)):
-        f = open("Karte"+str(x), 'w')
+        f = open("BingoKarte:"+str(x), 'w')
         Karte=spielfeld[x]
         for Zahl in Karte:
 
@@ -167,7 +178,7 @@ elif modi==2:
 
     
     print('''
-Nun beginnt das Spiel!
+Das Spiel beginnt jetzt!
 ES wird immer wieder aus einer Liste Wörter gezogen, und wenn diese
 in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
 
@@ -210,7 +221,7 @@ print('''
 
     ''')
 
-sieg=False
+sieg = False
 
 
 for x in range(0,int(anzahl_spieler)):
@@ -219,7 +230,7 @@ for x in range(0,int(anzahl_spieler)):
         sieg=Prüfen(spielfeld[x],int(höhe),int(breite))
         words_till_win = 0
 
-        while sieg == False and user_input != "quit":
+        while not sieg and user_input != "quit":
             wort_ziehen = gezogenes_wort(spielfeld[x], liste)
             words_till_win += 1
             liste.remove(wort_ziehen)
@@ -233,9 +244,9 @@ for x in range(0,int(anzahl_spieler)):
 
 
             if sieg==True:
-                print(f"\nSieh haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
+                print(f"\nSie haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
             
             user_input=input()
             if user_input=='quit':
-                print('Spiel wurde beendet')
+                print('Das Spiel wurde vom Benutzer beendet')
                 quit()
