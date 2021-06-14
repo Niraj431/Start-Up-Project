@@ -1,7 +1,10 @@
 import random
 import sys
 import os
-
+from typing import Any
+from prettytable import PrettyTable
+import curses
+import tkinter as tk
 
        
 def Karte_Erstellen(höhe,breite,liste):
@@ -32,15 +35,24 @@ def Karte_Ausgeben(Karte):
         t = PrettyTable(['1', '2', '3', '4', '5', '6', '7'])
 
     for Zahl in Karte:
-        
-        #print('\t')
-        #print(Zahl,end=':\t')
         t.add_row((Karte[Zahl][0]))
     print(t)
 
+import curses
 
+"""def mouse(stdscr):
+    curses.curs_set(0)
+    curses.mousemask(1)
+
+    key = stdscr.getch()
+
+    if key == curses.KEY_MOUSE:
+        stdscr.addstr(0,0, "Klick")
+        stdscr.refresh()
+    stdscr.getch()
+
+curses.wrapper(mouse)"""
 def gezogenes_wort(Karte, liste):
-
     wort_ziehen = random.choice(liste)
     for Zahl in Karte:
         y = 0
@@ -103,11 +115,11 @@ def Prüfen(Karte,höhe,breite):
 
 def restart():
     print("Spiel startet neu aufgrund von eines FehlInputs" + "\n" + "------------------------" + "\n")
-    os.execv(sys.executable, ['python'] + sys.argv) 
+    os.execv(sys.executable, ['/bin/python3'] + sys.argv) 
 def restarthöhebreite():
     print("Spiel startet neu aufgrund von eines FehlInputs")
     print("Bitte geben sie nur 3 x 3, 5 x 5, 7 x 7 ein" + "\n" + "------------------------" + "\n")
-    os.execv(sys.executable, ['python'] + sys.argv) 
+    os.execv(sys.executable, ['/bin/python3'] + sys.argv) 
 
 
 #Mainmethode
@@ -118,8 +130,9 @@ print("""
 |  _ <| | | |_  /_  /\ \ /\ / / _ \| '__/ _` | |  _ <| | '_ \ / _` |/ _ \ 
 | |_) | |_| |/ / / /  \ V  V / (_) | | | (_| | | |_) | | | | | (_| | (_) |
 |____/ \__,_/___/___|  \_/\_/ \___/|_|  \__,_| |____/|_|_| |_|\__, |\___/ 
-                                                               __/ |      
-Fuat, Duc und Niraj                                           |___/       """)   
+Fuat, Duc und Niraj                                            __/ |      
+                                                              |___/       """)   
+
 datei = open('text.txt','r')
 liste=[]
 liste = datei.read().split(';')
@@ -162,24 +175,23 @@ if modi == 1:
     spielfeld.append(einzelspieler)
     anzahl_spieler = 1
     for x in range(0,anzahl_spieler):
-        Karte_Ausgeben(spielfeld[x])   
-            
-elif modi==2: 
+        Karte = Karte_Ausgeben(spielfeld[x])
+elif modi == 2: 
     anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
     for x in range(0,int(anzahl_spieler)):
         spielfeld.append(Karte_Erstellen(höhe,breite,liste))
-    if höhe==3 & breite==3:
+    if höhe == 3 & breite == 3:
         t = PrettyTable(['1', '2', '3'])
-    elif höhe==5 & breite==5:
+    elif höhe == 5 & breite == 5:
        t = PrettyTable(['1', '2', '3', '4', '5'])
-    elif höhe==7 & breite==7:
+    elif höhe == 7 & breite == 7:
         t = PrettyTable(['1', '2', '3', '4', '5', '6', '7'])
 
     
 
 
-    for x in range(1,int(anzahl_spieler)):
-        f = open("Karte"+str(x+2), 'w')#karten erzeugt
+    for x in range(0,int(anzahl_spieler)):
+        f = open("Karte"+str(x+1), 'w')#karten erzeugt
         Karte=spielfeld[x]
         
         for Zahl in Karte:
@@ -263,7 +275,54 @@ for x in range(0,int(anzahl_spieler)):
 
             if sieg==True:
                 print(f"\nSie haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
-            
+                print("\033[1;35;40m\n")
+                print(f"\nSie haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
+                APP_TITLE = "TkTemplate_Idiom_01"
+                APP_XPOS = 300
+                APP_YPOS = 300
+                APP_WIDTH = 300
+                APP_HEIGHT = 300
+                SCROLL_TEXT = "GLÜCKWUNSCH! Sie haben GEWONNEN!"
+
+                class Application(tk.Frame):
+
+                    def __init__(self, master):
+                        self.master = master
+                        tk.Frame.__init__(self, master)
+                        
+                        self.canvas = tk.Canvas(self, bg='cyan', highlightthickness=0)
+                        self.canvas.pack(expand=True)
+                        
+                        xpos = APP_WIDTH
+                        ypos = 100
+                        self.canvas.create_text(xpos, ypos, anchor='w', text=SCROLL_TEXT,
+                            font=('Helvetica 30 bold'), tags='text')
+                            
+                        text_begin = self.canvas.bbox('text')[0]
+                        text_end = self.canvas.bbox('text')[2]
+                        self.text_length = text_end - text_begin
+                        
+                        self.scroll_text()
+                        
+                    def scroll_text(self):
+                        self.canvas.move('text', -2, 0)
+                        text_end = self.canvas.bbox('text')[2]
+                        if text_end < 0:
+                            self.canvas.move('text', APP_WIDTH + self.text_length, 0)
+                        
+                        self.canvas.after(20, self.scroll_text)
+                        
+                def anwenden():
+                    app_win = tk.Tk()
+                    app_win.title(APP_TITLE)
+                    app_win.geometry("+{}+{}".format(APP_XPOS, APP_YPOS))
+                    app_win.geometry("{}x{}".format(APP_WIDTH, APP_HEIGHT))
+                    
+                    app = Application(app_win).pack(fill='both', expand=True, padx=0, pady=0)
+                    
+                    app_win.mainloop()
+                if __name__ == '__main__':
+                    anwenden()
             user_input=input()
             if user_input=='quit':
                 print('Das Spiel wurde vom Benutzer beendet')
