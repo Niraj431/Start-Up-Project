@@ -24,12 +24,19 @@ def Karte_Erstellen(höhe,breite,liste):
         return Karte
 
 def Karte_Ausgeben(Karte):
-    
+    if höhe==3 & breite==3:
+        t = PrettyTable(['1', '2', '3'])
+    elif höhe==5 & breite==5:
+       t = PrettyTable(['1', '2', '3', '4', '5'])
+    elif höhe==7 & breite==7:
+        t = PrettyTable(['1', '2', '3', '4', '5', '6', '7'])
+
     for Zahl in Karte:
         
-        print('\t')
-        print(Zahl,end=':\t')
-        print('  '.join(Karte[Zahl][0]))
+        #print('\t')
+        #print(Zahl,end=':\t')
+        t.add_row((Karte[Zahl][0]))
+    print(t)
 
 
 def gezogenes_wort(Karte, liste):
@@ -157,20 +164,36 @@ if modi == 1:
     for x in range(0,anzahl_spieler):
         Karte_Ausgeben(spielfeld[x])   
             
-elif modi == 2: 
-    anzahl_spieler=input('Wie viele Personen sollen am Bingospiel teilnehmen?'+ "\n")
+elif modi==2: 
+    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
     for x in range(0,int(anzahl_spieler)):
         spielfeld.append(Karte_Erstellen(höhe,breite,liste))
+    if höhe==3 & breite==3:
+        t = PrettyTable(['1', '2', '3'])
+    elif höhe==5 & breite==5:
+       t = PrettyTable(['1', '2', '3', '4', '5'])
+    elif höhe==7 & breite==7:
+        t = PrettyTable(['1', '2', '3', '4', '5', '6', '7'])
 
-    for x in range(0,int(anzahl_spieler)):
-        f = open("BingoKarte:"+str(x), 'w')
+    
+
+
+    for x in range(1,int(anzahl_spieler)):
+        f = open("Karte"+str(x+2), 'w')#karten erzeugt
         Karte=spielfeld[x]
+        
         for Zahl in Karte:
 
-                f.write(Zahl+':\t|')
-                f.write('|  |'.join(Karte[Zahl][0]))
+            t.add_row(Karte[Zahl][0])
+        f.write(str(t))
 
-
+        for Zahl in Karte:
+            for Zahl in range(0,1):
+                t.del_row(Zahl)
+            
+      
+        
+        f.close
     
     print('''
 Das Spiel beginnt jetzt!
