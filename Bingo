@@ -1,9 +1,7 @@
 import random
 import sys
 import os
-from typing import Any
 from prettytable import PrettyTable
-import curses
 import tkinter as tk
 
        
@@ -130,8 +128,8 @@ print("""
 |  _ <| | | |_  /_  /\ \ /\ / / _ \| '__/ _` | |  _ <| | '_ \ / _` |/ _ \ 
 | |_) | |_| |/ / / /  \ V  V / (_) | | | (_| | | |_) | | | | | (_| | (_) |
 |____/ \__,_/___/___|  \_/\_/ \___/|_|  \__,_| |____/|_|_| |_|\__, |\___/ 
-Fuat, Duc und Niraj                                            __/ |      
-                                                              |___/       """)   
+                                                               __/ |      
+Fuat, Duc und Niraj                                           |___/       """)   
 
 datei = open('text.txt','r')
 liste=[]
@@ -176,24 +174,33 @@ if modi == 1:
     anzahl_spieler = 1
     for x in range(0,anzahl_spieler):
         Karte = Karte_Ausgeben(spielfeld[x])
+
+
 elif modi == 2: 
-    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
+
+    while True:
+        try:
+            anzahl_spieler=int(input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n"))
+            break
+        except ValueError:
+            print("Bitte geben Sie nur Zahlen ein.")
+            restart()
+
     for x in range(0,int(anzahl_spieler)):
         spielfeld.append(Karte_Erstellen(höhe,breite,liste))
+        
     if höhe == 3 & breite == 3:
         t = PrettyTable(['1', '2', '3'])
     elif höhe == 5 & breite == 5:
-       t = PrettyTable(['1', '2', '3', '4', '5'])
+        t = PrettyTable(['1', '2', '3', '4', '5'])
     elif höhe == 7 & breite == 7:
         t = PrettyTable(['1', '2', '3', '4', '5', '6', '7'])
-
-    
 
 
     for x in range(0,int(anzahl_spieler)):
         f = open("Karte"+str(x+1), 'w')#karten erzeugt
         Karte=spielfeld[x]
-        
+            
         for Zahl in Karte:
 
             t.add_row(Karte[Zahl][0])
@@ -203,9 +210,11 @@ elif modi == 2:
             for Zahl in range(0,1):
                 t.del_row(Zahl)
             
-      
+            f.close
+
         
-        f.close
+
+    
     
     print('''
 Das Spiel beginnt jetzt!
@@ -277,7 +286,7 @@ for x in range(0,int(anzahl_spieler)):
                 print(f"\nSie haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
                 print("\033[1;35;40m\n")
                 print(f"\nSie haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
-                APP_TITLE = "TkTemplate_Idiom_01"
+                APP_TITLE = "LAUFSCHRIFT - GRATULATION"
                 APP_XPOS = 300
                 APP_YPOS = 300
                 APP_WIDTH = 300
