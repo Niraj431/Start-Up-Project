@@ -2,9 +2,7 @@ import random
 import sys
 import os
 from prettytable import PrettyTable
-import prettytable
-
-
+import curses
        
 def Karte_Erstellen(höhe,breite,liste):
         Karte = { 
@@ -14,13 +12,13 @@ def Karte_Erstellen(höhe,breite,liste):
             Karte[str(x+1)]=[random.choices(liste,k=breite)]
         for Zahl in Karte:
             if Zahl=='2':
-                if höhe==3 & breite==3:
+                if höhe==3 and breite==3:
                     Karte[Zahl][0][1] = "X" 
             elif Zahl =='3':
-                if höhe==5 & breite==5:
+                if höhe==5 and breite==5:
                     Karte[Zahl][0][2] = "X"
             elif Zahl=='4':
-                if höhe==7 & breite==7:
+                if höhe==7 and breite==7:
                     Karte[Zahl][0][3] = "X"
        
         return Karte
@@ -34,22 +32,130 @@ def Karte_Ausgeben(Karte):
         t = PrettyTable(['1', '2', '3', '4', '5', '6', '7'])
 
     for Zahl in Karte:
-        
-        #print('\t')
-        #print(Zahl,end=':\t')
         t.add_row((Karte[Zahl][0]))
     print(t)
 
 
-def gezogenes_wort(Karte, liste):
 
+def mouse(stdscr):
+
+    
+
+    curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_RED)
+
+    
+    curses.curs_set(0)
+    stdscr = curses.initscr()
+
+    selectedRowIndex = 0
+    start_y = 0
+    start_x = 0
+
+
+    stdscr = curses.initscr()
+    inhalt = schreiben(selectedRowIndex)
+
+    """ die Anwendung kann die Größe des Bildschirms mithilfe der Variablen curses.LINES und
+        curses.COLS ermitteln, um die Größen y und x zu ermitteln
+        y - die Hoehe (Zeile) und  
+        x - der Spaltenanfang """
+
+    y = curses.LINES - 4
+    x = 1
+    x2 = 1
+    y2 = curses.LINES - 2
+    y3 = curses.LINES - 3
+    x3 = 1
+    y0 = curses.LINES - 1
+    fusszeile = 'F1-abbrechen / Entf-loeschen '
+    fusszeile2 = 'F2-kopieren / F3-verschieben'
+    fusszeile3 = 'RECHTS - Info lesen'
+
+        # mit addstr() - kann der Text auf dem Fesnter angezeigt werden
+    stdscr.addstr(y, x, '___________________________')
+    stdscr.addstr(y0, x, fusszeile)
+    stdscr.addstr(y2, x2, fusszeile2)
+    stdscr.addstr(y3, x3, fusszeile3)
+
+        # Kofzeile funktioniert sowie die Fusszeile
+    kopfzeile = 'Du bist in : '
+    y = 0
+    x = 1
+    stdscr.addstr(y, x, kopfzeile)  # zeigt de Kopfzeile an
+
+        # Position defienieren, ab welche Zeile und Spalte wird unsere Liste aufgelistet
+
+    pos_y = 1
+    pos_x = 1
+
+    """ da wir oben und unter Zeilen besetzt haben, müssen immer 2 wenige Zeilen aufgezählt werden, damit
+        die nicht mit Datei/Ordnernamen überschrieben wird und Fuss-, Kopfzeilen ihren Platz nicht verlieren """
+
+    anzahl_zeilen = curses.LINES - 4
+    breite = curses.COLS - 2
+
+    """ refresh() - das Fenster upzudaten 
+         getch() - wird auf eine Eingabe vom Benutzer gewartet, dass der Benutzer in der Lage ist
+        während des Auflisten Vorgangs weitere Funktionalitäten nutzen zu können """
+
+    inhalt.refresh(start_y, start_x, pos_y, pos_x, anzahl_zeilen, breite)
+    eingabe = stdscr.getch()
+
+    curses.wrapper(mouse())
+
+def schreiben(selectedRowIndex):
+
+    curses.update_lines_cols()
+    hohe = len(liste) + 1
+    breite = curses.COLS
+    win = curses.newpad(hohe, breite)
+    posX = 1
+
+    """ Die Methode enumerate () fügt einem iterablen Objekt einen Zähler hinzu und 
+    gibt ihn in Form eines Aufzählungsobjekts zurück. Dieses Aufzählungsobjekt wird dann direkt 
+    in der for-Schleife verwendet und mithilfe der liste() in eine Liste von Tupeln konvertiert """
+
+    for index, row in enumerate(liste):
+        # hoehe wird festgelegt
+        posY = index
+
+        # wenn der Index mit dem Index von der ausgewählten Element gleich wird
+        # das Attribut aus dem "Hintergrund" -Satz hinzufügen, der auf alle Schreibvorgänge
+        # im aktuellen Fenster angewendet wird.
+
+        if index == selectedRowIndex:
+
+            # attron() macht für dieses Element (Datei oder ein Ordner in der angezeigte Liste)
+            # die Hintergrundbeleuchtung mit weißer Farbe an
+            # attroff() macht aus
+            # nicht ausgewählte bleiben wie sie sind
+
+            win.attron(curses.color_pair(1))
+            win.addstr(posY, posX, row)
+            win.attroff(curses.color_pair(1))
+        else:
+            win.addstr(posY, posX, row)
+
+    # da es hier ums Darstellen der Liste und dessen Inhalt handelt, soll das ganze Fenster wiederzurückgegen
+
+    return win
+
+# get_path ist auch als Hilfsfunktion implementiert wurde um den Pfad des Zielordners
+# beim kopieren und verschieben zu nutzen
+# hier wurde so aufgebaut, dass der Benutzer gefordert wird den Pfad des gewünschten Zielorners einzugeben
+
+    
+
+def gezogenes_wort(Karte, liste):
     wort_ziehen = random.choice(liste)
     for Zahl in Karte:
-        i = 0
-        for word in Karte[Zahl][0]:
-            if word == wort_ziehen:
-                Karte[Zahl][0][i] = "X"
-            i += 1
+        y = 0
+        for wort in Karte[Zahl][0]:
+            if wort == wort_ziehen:
+                Karte[Zahl][0][y] = "X"
+            y += 1
             
     return wort_ziehen     
 
@@ -59,15 +165,13 @@ def Prüfen(Karte,höhe,breite):
     #Zunächst werden die horizontalen Gewinne nachgeprüft
     
     for Zahl in Karte:
-        counter=0
-        
+        counter = 0   
         for x in range(0,int(höhe)):
-
             if Karte[Zahl][0][x]=='X':
-                counter+=1
+                counter+= 1
             
-        if counter==int(höhe):
-            sieg=True
+        if counter is int(höhe):
+            sieg = True
             return sieg
             
     #jetzt werden die vertikalen Gewinne nachgeprüft
@@ -107,15 +211,24 @@ def Prüfen(Karte,höhe,breite):
 
 def restart():
     print("Spiel startet neu aufgrund von eines FehlInputs" + "\n" + "------------------------" + "\n")
-    os.execv(sys.executable, ['python'] + sys.argv) 
+    os.execv(sys.executable, ['/bin/python3'] + sys.argv) 
 def restarthöhebreite():
     print("Spiel startet neu aufgrund von eines FehlInputs")
     print("Bitte geben sie nur 3 x 3, 5 x 5, 7 x 7 ein" + "\n" + "------------------------" + "\n")
-    os.execv(sys.executable, ['python'] + sys.argv) 
+    os.execv(sys.executable, ['/bin/python3'] + sys.argv) 
 
 
 #Mainmethode
-    
+print(""" 
+ ____                                       _   ____  _                   
+|  _ \                                     | | |  _ \(_)                  
+| |_) |_   _ __________      _____  _ __ __| | | |_) |_ _ __   __ _  ___  
+|  _ <| | | |_  /_  /\ \ /\ / / _ \| '__/ _` | |  _ <| | '_ \ / _` |/ _ \ 
+| |_) | |_| |/ / / /  \ V  V / (_) | | | (_| | | |_) | | | | | (_| | (_) |
+|____/ \__,_/___/___|  \_/\_/ \___/|_|  \__,_| |____/|_|_| |_|\__, |\___/ 
+                                                               __/ |      
+Fuat, Duc und Niraj                                           |___/       """)   
+
 datei = open('text.txt','r')
 liste=[]
 liste = datei.read().split(';')
@@ -123,7 +236,7 @@ liste = datei.read().split(';')
 #Fehlererkennung bei Userinput#
 while True:
     try:
-        höhe=int(input("\n" + "Wilkommen zu Buzzword Bingo! "+ "\n" + "Geben sie die Höhe der Bingokarte ein:" + "\n"))
+        höhe=int(input("\n" + "Geben sie die Höhe der Bingokarte ein:" + "\n"))
         breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
         acceptable_values = list((3, 5, 7))
         if höhe and breite in acceptable_values and höhe == breite:
@@ -153,58 +266,57 @@ while True:
 spielfeld=[]
 
 
-if modi==1:
+if modi == 1:
     einzelspieler = Karte_Erstellen(höhe,breite,liste)
     spielfeld.append(einzelspieler)
     anzahl_spieler = 1
+    curses.wrapper(mouse)
     for x in range(0,anzahl_spieler):
-        Karte_Ausgeben(spielfeld[x])   
-            
-elif modi==2: 
-    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
+        Karte = Karte_Ausgeben(spielfeld[x])
+
+
+elif modi == 2: 
+
+    while True:
+        try:
+            anzahl_spieler=int(input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n"))
+            break
+        except ValueError:
+            print("Bitte geben Sie nur Zahlen ein.")
+            restart()
+
     for x in range(0,int(anzahl_spieler)):
         spielfeld.append(Karte_Erstellen(höhe,breite,liste))
-    if höhe==3 & breite==3:
+        
+    if höhe == 3 & breite == 3:
         t = PrettyTable(['1', '2', '3'])
-    elif höhe==5 & breite==5:
-       t = PrettyTable(['1', '2', '3', '4', '5'])
-    elif höhe==7 & breite==7:
+    elif höhe == 5 & breite == 5:
+        t = PrettyTable(['1', '2', '3', '4', '5'])
+    elif höhe == 7 & breite == 7:
         t = PrettyTable(['1', '2', '3', '4', '5', '6', '7'])
-
-    
 
 
     for x in range(0,int(anzahl_spieler)):
-        f = open("Karte"+str(x+1), 'w')
+        f = open("Karte"+str(x+1), 'w')#karten erzeugt
         Karte=spielfeld[x]
-        Zahl = 5
-        for Zahl in Karte:
-             t.add_row(Karte[Zahl][0])
-             print(t)    
             
+        for Zahl in Karte:
+
+            t.add_row(Karte[Zahl][0])
         f.write(str(t))
-        f.close
-       
-#f.write("\n" + letter + ':\t<')
- #           f.write('>\t<'.join(card[letter][0]))
-  #          f.write(">")
-   #         f.close
+
+        for Zahl in Karte:
+            for Zahl in range(0,1):
+                t.del_row(Zahl)
+            
+            f.close
 
         
 
     
-
-
- #t = PrettyTable(['BUZZ', 'WORD', 'BINGO'])
- #   for Zahl in Karte:
-  #      
-   #     print('\t')
-        #print(Zahl,end=':\t')
-    #    t.add_row((Karte[Zahl][0]))
-    #print(t)
     
     print('''
-Nun beginnt das Spiel!
+Das Spiel beginnt jetzt!
 ES wird immer wieder aus einer Liste Wörter gezogen, und wenn diese
 in deiner Bingokarte vorkommen, so werden diese durch ein X ersetzt.
 
@@ -247,32 +359,6 @@ print('''
 
     ''')
 
-sieg=False
+sieg = False
 
 
-for x in range(0,int(anzahl_spieler)):
-        print("\nDrücke Enter um ein neues Wort zu ziehen.\nZum Beenden, schribe bitte quit.\n")
-        user_input = input()
-        sieg=Prüfen(spielfeld[x],int(höhe),int(breite))
-        words_till_win = 0
-
-        while sieg == False and user_input != "quit":
-            wort_ziehen = gezogenes_wort(spielfeld[x], liste)
-            words_till_win += 1
-            liste.remove(wort_ziehen)
-            
-
-            print(f"\nGezogenes Wort: {wort_ziehen}.")
-            print(f"Anzahl der gezogenen Wörtern: {words_till_win}.\n")
-            Karte_Ausgeben(spielfeld[x])
-
-            sieg=Prüfen(spielfeld[x],int(höhe),int(breite))
-
-
-            if sieg==True:
-                print(f"\nSieh haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
-            
-            user_input=input()
-            if user_input=='quit':
-                print('Spiel wurde beendet')
-                quit()
