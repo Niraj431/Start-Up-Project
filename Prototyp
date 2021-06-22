@@ -38,9 +38,6 @@ def Karte_Ausgeben(Karte):
 
 
 def mouse(stdscr):
-
-    
-
     curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_RED)
@@ -53,57 +50,74 @@ def mouse(stdscr):
     start_y = 0
     start_x = 0
 
+    while True:
+        stdscr = curses.initscr()
+        inhalt = schreiben(selectedRowIndex)
 
-    stdscr = curses.initscr()
-    inhalt = schreiben(selectedRowIndex)
+        """ die Anwendung kann die Größe des Bildschirms mithilfe der Variablen curses.LINES und
+            curses.COLS ermitteln, um die Größen y und x zu ermitteln
+            y - die Hoehe (Zeile) und  
+            x - der Spaltenanfang """
 
-    """ die Anwendung kann die Größe des Bildschirms mithilfe der Variablen curses.LINES und
-        curses.COLS ermitteln, um die Größen y und x zu ermitteln
-        y - die Hoehe (Zeile) und  
-        x - der Spaltenanfang """
+        y = curses.LINES - 4
+        x = 1
+        x2 = 1
+        y2 = curses.LINES - 2
+        y3 = curses.LINES - 3
+        x3 = 1
+        y0 = curses.LINES - 1
+        fusszeile = 'F1-abbrechen / Enter-X '
 
-    y = curses.LINES - 4
-    x = 1
-    x2 = 1
-    y2 = curses.LINES - 2
-    y3 = curses.LINES - 3
-    x3 = 1
-    y0 = curses.LINES - 1
-    fusszeile = 'F1-abbrechen / Entf-loeschen '
-    fusszeile2 = 'F2-kopieren / F3-verschieben'
-    fusszeile3 = 'RECHTS - Info lesen'
 
-        # mit addstr() - kann der Text auf dem Fesnter angezeigt werden
-    stdscr.addstr(y, x, '___________________________')
-    stdscr.addstr(y0, x, fusszeile)
-    stdscr.addstr(y2, x2, fusszeile2)
-    stdscr.addstr(y3, x3, fusszeile3)
+            # mit addstr() - kann der Text auf dem Fesnter angezeigt werden
+        stdscr.addstr(y, x, '___________________________')
+        stdscr.addstr(y0, x, fusszeile)
 
-        # Kofzeile funktioniert sowie die Fusszeile
-    kopfzeile = 'Du bist in : '
-    y = 0
-    x = 1
-    stdscr.addstr(y, x, kopfzeile)  # zeigt de Kopfzeile an
+            # Kofzeile funktioniert sowie die Fusszeile
+        kopfzeile = 'Buzzword Bingo - EINZELSPIELERMODUS'
+        y = 0
+        x = 1
+        stdscr.addstr(y, x, kopfzeile)  # zeigt de Kopfzeile an
 
-        # Position defienieren, ab welche Zeile und Spalte wird unsere Liste aufgelistet
+            # Position defienieren, ab welche Zeile und Spalte wird unsere Liste aufgelistet
 
-    pos_y = 1
-    pos_x = 1
+        pos_y = 1
+        pos_x = 1
 
-    """ da wir oben und unter Zeilen besetzt haben, müssen immer 2 wenige Zeilen aufgezählt werden, damit
-        die nicht mit Datei/Ordnernamen überschrieben wird und Fuss-, Kopfzeilen ihren Platz nicht verlieren """
+        """ da wir oben und unter Zeilen besetzt haben, müssen immer 2 wenige Zeilen aufgezählt werden, damit
+            die nicht mit Datei/Ordnernamen überschrieben wird und Fuss-, Kopfzeilen ihren Platz nicht verlieren """
 
-    anzahl_zeilen = curses.LINES - 4
-    breite = curses.COLS - 2
+        anzahl_zeilen = curses.LINES - 4
+        breite = curses.COLS - 2
 
-    """ refresh() - das Fenster upzudaten 
-         getch() - wird auf eine Eingabe vom Benutzer gewartet, dass der Benutzer in der Lage ist
-        während des Auflisten Vorgangs weitere Funktionalitäten nutzen zu können """
+        """ refresh() - das Fenster upzudaten 
+            getch() - wird auf eine Eingabe vom Benutzer gewartet, dass der Benutzer in der Lage ist
+            während des Auflisten Vorgangs weitere Funktionalitäten nutzen zu können """
 
-    inhalt.refresh(start_y, start_x, pos_y, pos_x, anzahl_zeilen, breite)
-    eingabe = stdscr.getch()
+        inhalt.refresh(start_y, start_x, pos_y, pos_x, anzahl_zeilen, breite)
+        eingabe = stdscr.getch()
 
-    curses.wrapper(mouse())
+        if eingabe == curses.KEY_DOWN and selectedRowIndex + 1 < len(liste):
+            selectedRowIndex += 1
+            if selectedRowIndex % anzahl_zeilen == 0:
+                start_y += anzahl_zeilen
+
+        elif eingabe == curses.KEY_UP and selectedRowIndex > 0:
+            selectedRowIndex -= 1
+            if selectedRowIndex % anzahl_zeilen > 0:
+                start_y -= anzahl_zeilen
+
+        elif eingabe in [10, 13]:
+            if liste[selectedRowIndex] == '/..':
+                pfad = os.path.dirname(pfad)
+            else:
+                pfad = os.path.join(pfad, liste[selectedRowIndex])
+
+            # wenn der Vorgang ausgeführt ist, soll es wieder von vorne anfangen werden
+            # (Beleuchtung ist ganz oben der Liste)
+            selectedRowIndex = 0
+        elif eingabe == curses.KEY_F2:
+            quit()
 
 def schreiben(selectedRowIndex):
 
@@ -360,5 +374,6 @@ print('''
     ''')
 
 sieg = False
+
 
 
