@@ -3,7 +3,10 @@ import sys
 import os
 from prettytable import PrettyTable
 import curses
-       
+import prettytable
+
+liste = prettytable
+
 def Karte_Erstellen(höhe,breite,liste):
         Karte = { 
 
@@ -33,7 +36,8 @@ def Karte_Ausgeben(Karte):
 
     for Zahl in Karte:
         t.add_row((Karte[Zahl][0]))
-    print(t)
+    liste = t
+    return Karte
 
 
 
@@ -41,6 +45,7 @@ def mouse(stdscr):
     curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_RED)
+
 
     
     curses.curs_set(0)
@@ -59,12 +64,8 @@ def mouse(stdscr):
             y - die Hoehe (Zeile) und  
             x - der Spaltenanfang """
 
-        y = curses.LINES - 4
-        x = 1
-        x2 = 1
-        y2 = curses.LINES - 2
-        y3 = curses.LINES - 3
-        x3 = 1
+        y = höhe + 1
+        x = curses.LINES - 12
         y0 = curses.LINES - 1
         fusszeile = 'F1-abbrechen / Enter-X '
 
@@ -77,7 +78,7 @@ def mouse(stdscr):
         kopfzeile = 'Buzzword Bingo - EINZELSPIELERMODUS'
         y = 0
         x = 1
-        stdscr.addstr(y, x, kopfzeile)  # zeigt de Kopfzeile an
+        stdscr.addstr(y, x, kopfzeile)  # zeigt die Kopfzeile an
 
             # Position defienieren, ab welche Zeile und Spalte wird unsere Liste aufgelistet
 
@@ -86,14 +87,14 @@ def mouse(stdscr):
 
         """ da wir oben und unter Zeilen besetzt haben, müssen immer 2 wenige Zeilen aufgezählt werden, damit
             die nicht mit Datei/Ordnernamen überschrieben wird und Fuss-, Kopfzeilen ihren Platz nicht verlieren """
-
-        anzahl_zeilen = curses.LINES - 4
-        breite = curses.COLS - 2
+        
+        anzahl_zeilen = höhe
+        breite = curses.COLS - 3
 
         """ refresh() - das Fenster upzudaten 
             getch() - wird auf eine Eingabe vom Benutzer gewartet, dass der Benutzer in der Lage ist
             während des Auflisten Vorgangs weitere Funktionalitäten nutzen zu können """
-
+       
         inhalt.refresh(start_y, start_x, pos_y, pos_x, anzahl_zeilen, breite)
         eingabe = stdscr.getch()
 
@@ -106,12 +107,18 @@ def mouse(stdscr):
             selectedRowIndex -= 1
             if selectedRowIndex % anzahl_zeilen > 0:
                 start_y -= anzahl_zeilen
+        if eingabe == curses.KEY_RIGHT and selectedRowIndex + 1 < len(liste):
+            selectedRowIndex += 1
+            if selectedRowIndex % anzahl_zeilen == 0:
+                start_x += anzahl_zeilen
 
-        elif eingabe in [10, 13]:
-            if liste[selectedRowIndex] == '/..':
-                pfad = os.path.dirname(pfad)
-            else:
-                pfad = os.path.join(pfad, liste[selectedRowIndex])
+        elif eingabe == curses.KEY_LEFT and selectedRowIndex > 0:
+            selectedRowIndex -= 1
+            if selectedRowIndex % anzahl_zeilen > 0:
+                start_x -= anzahl_zeilen
+
+        elif eingabe in [0, 0] == curses.KEY_ENTER:
+            stdscr.addstr(0,0, "X")
 
             # wenn der Vorgang ausgeführt ist, soll es wieder von vorne anfangen werden
             # (Beleuchtung ist ganz oben der Liste)
@@ -120,7 +127,7 @@ def mouse(stdscr):
             quit()
 
 def schreiben(selectedRowIndex):
-
+    
     curses.update_lines_cols()
     hohe = len(liste) + 1
     breite = curses.COLS
@@ -284,10 +291,10 @@ if modi == 1:
     einzelspieler = Karte_Erstellen(höhe,breite,liste)
     spielfeld.append(einzelspieler)
     anzahl_spieler = 1
-    curses.wrapper(mouse)
+    
     for x in range(0,anzahl_spieler):
+        curses.wrapper(mouse)
         Karte = Karte_Ausgeben(spielfeld[x])
-
 
 elif modi == 2: 
 
@@ -374,6 +381,5 @@ print('''
     ''')
 
 sieg = False
-
 
 
