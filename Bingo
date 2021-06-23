@@ -1,9 +1,7 @@
 import random
 import sys
 import os
-from typing import Any
 from prettytable import PrettyTable
-import curses
 import tkinter as tk
 
        
@@ -12,12 +10,9 @@ def Karte_Erstellen(höhe,breite,liste):
 
             } 
         for x in range(0,höhe):
-            Karte[str(x+1)]=[random.choices(liste,k=breite)]
+            Karte[str(x+1)]=[random.sample(liste,k=breite)]
         for Zahl in Karte:
-            if Zahl=='2':
-                if höhe==3 and breite==3:
-                    Karte[Zahl][0][1] = "X" 
-            elif Zahl =='3':
+            if Zahl =='3':
                 if höhe==5 and breite==5:
                     Karte[Zahl][0][2] = "X"
             elif Zahl=='4':
@@ -38,20 +33,6 @@ def Karte_Ausgeben(Karte):
         t.add_row((Karte[Zahl][0]))
     print(t)
 
-import curses
-
-"""def mouse(stdscr):
-    curses.curs_set(0)
-    curses.mousemask(1)
-
-    key = stdscr.getch()
-
-    if key == curses.KEY_MOUSE:
-        stdscr.addstr(0,0, "Klick")
-        stdscr.refresh()
-    stdscr.getch()
-
-curses.wrapper(mouse)"""
 def gezogenes_wort(Karte, liste):
     wort_ziehen = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
     for Zahl in Karte:
