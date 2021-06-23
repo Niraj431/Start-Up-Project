@@ -33,13 +33,31 @@ def Karte_Ausgeben(Karte):
         t.add_row((Karte[Zahl][0]))
     print(t)
 
+import curses
+
+"""def mouse(stdscr):
+    curses.curs_set(0)
+    curses.mousemask(1)
+
+    key = stdscr.getch()
+
+    if key == curses.KEY_MOUSE:
+        stdscr.addstr(0,0, "Klick")
+        stdscr.refresh()
+    stdscr.getch()
+
+curses.wrapper(mouse)"""
 def gezogenes_wort(Karte, liste):
     wort_ziehen = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
     for Zahl in Karte:
         y = 0
         for wort in Karte[Zahl][0]:
-            if wort.casefold() == wort_ziehen.casefold():
+            if wort.casefold() != wort_ziehen.casefold():
+                print("Geben sie bitte ein Wort aus der Liste ein")
+                break
+            elif wort.casefold() == wort_ziehen.casefold():
                 Karte[Zahl][0][y] = "X"
+            
             y += 1
             
     return wort_ziehen     
