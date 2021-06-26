@@ -20,11 +20,11 @@ def Karte_Erstellen(höhe,breite,liste):
         return Karte
 
 def Karte_Ausgeben(Karte):
-    if höhe==3 & breite==3:
+    if höhe == 3 & breite == 3:
         t = PrettyTable(['1', '2', '3'])
-    elif höhe==5 & breite==5:
+    elif höhe == 5 & breite == 5:
        t = PrettyTable(['1', '2', '3', '4', '5'])
-    elif höhe==7 & breite==7:
+    elif höhe == 7 & breite == 7:
         t = PrettyTable(['1', '2', '3', '4', '5', '6', '7'])
 
     for Zahl in Karte:
@@ -105,6 +105,12 @@ def restarthöhebreite():
     print("Spiel startet neu aufgrund von eines FehlInputs")
     print("Bitte geben sie nur 3 x 3, 5 x 5, 7 x 7 ein" + "\n" + "------------------------" + "\n")
     os.execv(sys.executable, ['/bin/python3'] + sys.argv) 
+def beenden():
+    user_input = input()
+    if user_input == "exit":
+        quit()
+
+
 
 
 #Mainmethode
@@ -194,12 +200,9 @@ elif modi == 2:
     
     print("""
 Es wurden """ + anzahl_spieler + """ Bingo Karten generiert und in dem Verzeichnis gespeichert, wo sich das Projekt befindet.
-Schreiben sie "quit" um das Spiel zu beenden.""")
+Schreiben sie "exit" um das Spiel zu beenden.""")
             
-    user_input=input()
-    if user_input=='quit':
-        print('Viel Spaß beim Spielen!!!')
-        quit()
+    beenden()
 
 
 elif modi != 1 or 2:
@@ -226,7 +229,7 @@ for x in range(0,int(anzahl_spieler)):
         sieg=Prüfen(spielfeld[x],int(höhe),int(breite))
         words_till_win = 0
         user_input = input()
-        while not sieg and user_input != "quit":
+        while not sieg and user_input != "exit":
             wort_ziehen = gezogenes_wort(spielfeld[x], liste)
             words_till_win += 1
             
@@ -288,7 +291,7 @@ for x in range(0,int(anzahl_spieler)):
                     app_win.mainloop()
                 if __name__ == '__main__':
                     anwenden()
-            user_input = input()
-            if user_input == "exit":
-                quit()
+                beenden()
+            
+
             
