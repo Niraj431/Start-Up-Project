@@ -131,7 +131,7 @@ liste = datei.read().split(';')
 #Fehlererkennung bei Userinput#
 while True:
     try:
-        höhe=int(input("\n" + "Geben sie die Höhe der Bingokarte ein:" + "\n"))
+        höhe=int(input("\n" +"Es gibt nur die Spielfeld größen 3x3, 5x5 und 7x7"+ "\n"+"Geben sie die Höhe der Bingokarte ein:" + "\n"))
         breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
         acceptable_values = list((3, 5, 7))
         if höhe and breite in acceptable_values and höhe == breite:
@@ -292,6 +292,3 @@ for x in range(0,int(anzahl_spieler)):
                 if __name__ == '__main__':
                     anwenden()
                 beenden()
-            
-
-            
