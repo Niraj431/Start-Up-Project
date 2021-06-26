@@ -1,8 +1,11 @@
 import random
 import sys
 import os
+from tkinter.constants import TRUE
 from prettytable import PrettyTable
 import tkinter as tk
+from colorama import init, Fore, Style
+init()
        
 def Karte_Erstellen(höhe,breite,liste):
         Karte = { 
@@ -32,18 +35,20 @@ def Karte_Ausgeben(Karte):
     print(t)
 
 
-def gezogenes_wort(Karte, liste):
-    wort_eingabe = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
+def gezogenes_wort(Karte, liste, wort_eingabe):
     for Zahl in Karte:
         y = 0
-        if wort_eingabe == "exit":
-                quit()
+        
         for wort in Karte[Zahl][0]:
+            if wort_eingabe == "exit":
+                quit()
             if wort.casefold() != wort_eingabe.casefold():
-                print("Geben sie bitte ein Wort aus der Liste ein")
+                print(Fore.GREEN + "Geben sie bitte ein Wort aus der Liste ein")
+                print(Style.RESET_ALL, end="")
+                break
             elif wort.casefold() == wort_eingabe.casefold():
                 Karte[Zahl][0][y] = "X"
-            
+                break
             y += 1
             
     return wort_eingabe    
@@ -228,9 +233,9 @@ for x in range(0,int(anzahl_spieler)):
         
         sieg=Prüfen(spielfeld[x],int(höhe),int(breite))
         words_till_win = 0
-        user_input = input()
-        while not sieg and user_input != "exit":
-            wort_eingabe = gezogenes_wort(spielfeld[x], liste)
+        wort_eingabe = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
+        while not sieg and wort_eingabe != "exit":
+            wort_eingabe = gezogenes_wort(spielfeld[x], liste, wort_eingabe)
             words_till_win += 1
             
             
@@ -291,4 +296,5 @@ for x in range(0,int(anzahl_spieler)):
                     app_win.mainloop()
                 if __name__ == '__main__':
                     anwenden()
+                wort_eingabe = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
                 beenden()
