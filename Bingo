@@ -3,7 +3,6 @@ import sys
 import os
 from prettytable import PrettyTable
 import tkinter as tk
-
        
 def Karte_Erstellen(höhe,breite,liste):
         Karte = { 
@@ -18,7 +17,6 @@ def Karte_Erstellen(höhe,breite,liste):
             elif Zahl=='4':
                 if höhe==7 and breite==7:
                     Karte[Zahl][0][3] = "X"
-       
         return Karte
 
 def Karte_Ausgeben(Karte):
@@ -35,18 +33,20 @@ def Karte_Ausgeben(Karte):
 
 
 def gezogenes_wort(Karte, liste):
-    wort_ziehen = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
+    wort_eingabe = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
     for Zahl in Karte:
         y = 0
+        if wort_eingabe == "exit":
+                quit()
         for wort in Karte[Zahl][0]:
-            if wort.casefold() != wort_ziehen.casefold():
+            if wort.casefold() != wort_eingabe.casefold():
                 print("Geben sie bitte ein Wort aus der Liste ein")
-            elif wort.casefold() == wort_ziehen.casefold():
+            elif wort.casefold() == wort_eingabe.casefold():
                 Karte[Zahl][0][y] = "X"
             
             y += 1
             
-    return wort_ziehen     
+    return wort_eingabe    
 
 def Prüfen(Karte,höhe,breite):
 
@@ -193,7 +193,7 @@ elif modi == 2:
         f.close
     
     print("""
-Es wurden """ + anzahl_spieler + """ Bingo Karten generiert und in dem Verzeichnis gespeichert, wo sich das Projekt  befindet.
+Es wurden """ + anzahl_spieler + """ Bingo Karten generiert und in dem Verzeichnis gespeichert, wo sich das Projekt befindet.
 Schreiben sie "quit" um das Spiel zu beenden.""")
             
     user_input=input()
@@ -240,7 +240,6 @@ for x in range(0,int(anzahl_spieler)):
 
 
             if sieg==True:
-                print(f"\nSie haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
                 print("\033[1;35;40m\n")
                 print(f"\nSie haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}.")
                 APP_TITLE = "TkTemplate_Idiom_01"
@@ -289,7 +288,7 @@ for x in range(0,int(anzahl_spieler)):
                     app_win.mainloop()
                 if __name__ == '__main__':
                     anwenden()
-            user_input=input()
-            if user_input=='quit':
-                print('Das Spiel wurde vom Benutzer beendet')
+            user_input = input()
+            if user_input == "exit":
                 quit()
+            
