@@ -222,8 +222,8 @@ elif modi != 1 or 2:
 
 
 print('''
-Das Spiel beginnt jetzt!
-''')#prints ändern
+Viel spaß beim Spielen wünschen euch Fuat, Duc und Niraj :)
+''')
 
 sieg = False
 
