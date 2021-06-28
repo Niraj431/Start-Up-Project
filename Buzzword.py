@@ -19,10 +19,10 @@ def Karte_Erstellen(breite,liste):
         for Zahl in Karte:
             if Zahl == '3':
                 if breite == 5:
-                    Karte[Zahl][0][2] = "X"
+                    Karte[Zahl][0][2] = '\033[40m'+'\033[31m' + "       X       " + '\033[39m' + '\033[49m'
             elif Zahl == '4':
                 if breite == 7:
-                    Karte[Zahl][0][3] = "X"
+                    Karte[Zahl][0][3] = '\033[40m'+'\033[31m' + "       X       " + '\033[39m' + '\033[49m'
         return Karte
 
 
