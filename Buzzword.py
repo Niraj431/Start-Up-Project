@@ -2,19 +2,17 @@
 import random
 import sys
 import os
-from colorama.ansi import Back
 from prettytable import PrettyTable
 import tkinter as tk
-from colorama import init, Fore, Style
+from colorama import init, Fore
 init(autoreset=True) 
+from playsound import playsound
 
 
 def Karte_Erstellen(höhe,breite,liste):
         Karte = { 
 
             }
-
-        random.shuffle(Karte)
         for x in range(0,höhe):
             Karte[str(x+1)]=[random.sample(liste,k=breite)]
             
@@ -49,6 +47,7 @@ def gezogenes_wort(Karte, liste,wort_eingabe):
             for wort in Karte[Zahl][0]:         
                 if wort.casefold() == wort_eingabe.casefold():
                     Karte[Zahl][0][y] = '\033[40m'+'\033[31m' + "       X       " + '\033[39m' + '\033[49m'
+                    playsound('damn.mp3')
                     return wort_eingabe
 
                 y += 1 
@@ -307,7 +306,7 @@ for x in range(0,int(anzahl_spieler)):
                     app_win.geometry("{}x{}".format(weite_fenster, höhe_fenster))
 
                     app = Application(app_win).pack(fill='both', expand=True, padx=0, pady=0)
-
+                    playsound('youwin.mp3')
                     app_win.mainloop()
                     quit()
                 if __name__ == '__main__':
