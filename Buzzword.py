@@ -1,3 +1,4 @@
+#erforderliche Module
 import random
 import sys
 import os
@@ -7,12 +8,16 @@ import tkinter as tk
 from colorama import init, Fore, Style
 init(autoreset=True) 
 
+
 def Karte_Erstellen(höhe,breite,liste):
         Karte = { 
 
             }
+
+        random.shuffle(Karte)
         for x in range(0,höhe):
             Karte[str(x+1)]=[random.sample(liste,k=breite)]
+            
         for Zahl in Karte:
             if Zahl =='3':
                 if höhe==5 and breite==5:
@@ -21,6 +26,7 @@ def Karte_Erstellen(höhe,breite,liste):
                 if höhe==7 and breite==7:
                     Karte[Zahl][0][3] = "X"
         return Karte
+
 
 def Karte_Ausgeben(Karte):
     if höhe == 3 & breite == 3:
@@ -45,7 +51,6 @@ def gezogenes_wort(Karte, liste,wort_eingabe):
                     Karte[Zahl][0][y] = '\033[40m'+'\033[31m' + "       X       " + '\033[39m' + '\033[49m'
                     return wort_eingabe
 
-
                 y += 1 
 
 
@@ -57,7 +62,7 @@ def gezogenes_wort(Karte, liste,wort_eingabe):
 def Prüfen(Karte,höhe,breite):
 
     sieg = False
-    #Zunächst werden die horizontalen Gewinne nachgeprüft
+    #horizontaler Gewinn
 
     for Zahl in Karte:
         counter = 0   
@@ -69,7 +74,7 @@ def Prüfen(Karte,höhe,breite):
             sieg = True
             return sieg
 
-    #jetzt werden die vertikalen Gewinne nachgeprüft
+    #vertikaler Gewinn
     for x in range(0,int(höhe)):
         counter=0
 
@@ -80,7 +85,7 @@ def Prüfen(Karte,höhe,breite):
             sieg=True
             return sieg
 
-    #jetzt werden die diagonalen Gewinne nachgeprüft
+    #diagonaler Gewinn links oben nach rechts unten
     for x in range (0,int(höhe)):
         y=0
         counter=0
@@ -92,7 +97,8 @@ def Prüfen(Karte,höhe,breite):
             sieg=True
             return sieg
 
-    for x in range (int(höhe),-1,-1):
+    #diagonaler Gewinn von rechts oben nach links unten
+    for x in range (int(höhe)):
         y=int(höhe)-1
         counter=0
         for Zahl in Karte:
@@ -103,10 +109,11 @@ def Prüfen(Karte,höhe,breite):
             sieg=True
         return sieg
 
-
+#Methode, um Spiel bei Fehinput neuzustarten
 def restart():
     print("Spiel startet neu aufgrund von eines FehlInputs" + "\n" + "------------------------" + "\n")
     os.execv(sys.executable, ['/bin/python3'] + sys.argv) 
+#Methode, um Spiel bei Fehlinput speziell bei der Eingabe von Höhe & Breite neuzustarten
 def restarthöhebreite():
     print("Spiel startet neu aufgrund von eines FehlInputs")
     print("Bitte geben sie nur 3 x 3, 5 x 5, 7 x 7 ein" + "\n" + "------------------------" + "\n")
@@ -118,8 +125,7 @@ def beenden():
 
 
 
-
-#Mainmethode
+###MAINMETHODE###
 print('\033[40m'+
 """
  ____                                       _   ____  _                   
@@ -131,14 +137,16 @@ print('\033[40m'+
 Fuat, Duc und Niraj                                            __/ |      
                                                               |___/       """+'\033[49m')   
 
-datei = open('woerter.txt','r')#andere name
+#Textdatei wird ausgelesen, Wörter werde in der Datei mit ";" getrennt
+datei = open('woerter.txt','r')
 liste=[]
 liste = datei.read().split(';')
 
 #Fehlererkennung bei Userinput#
 while True:
     try:
-        höhe=int(input("\n" +"Es gibt nur die Spielfeldgrößen " + '\033[96m' + '\033[40m'+ "3x3, 5x5" '\033[39m'+'\033[49m'+ " und " +'\033[96m' + '\033[40m'+ "7x7"+ '\033[39m'+'\033[49m'+ "\n"+"Geben sie die Höhe der Bingokarte ein:" + "\n"))
+        höhe=int(input("\n" +"Es gibt nur die Spielfeldgrößen " + '\033[96m' + '\033[40m'+ "3x3, 5x5" '\033[39m'+'\033[49m'+ " und " 
+        +'\033[96m' + '\033[40m'+ "7x7"+ '\033[39m'+'\033[49m'+ "\n"+"Geben sie die Höhe der Bingokarte ein:" + "\n"))
         breite=int(input('Geben sie die Breite der Bingokarte ein:' + "\n"))
         acceptable_values = list((3, 5, 7))
         if höhe and breite in acceptable_values and höhe == breite:
@@ -167,15 +175,24 @@ while True:
 
 spielfeld=[]
 
-
+#Spielstart im Eizelspielermodus
 if modi == 1:
     einzelspieler = Karte_Erstellen(höhe,breite,liste)
     spielfeld.append(einzelspieler)
     anzahl_spieler = 1
     for x in range(0,anzahl_spieler):
         Karte = Karte_Ausgeben(spielfeld[x])
+
+#Spielstart in Mehrspielermodus
 elif modi == 2: 
-    anzahl_spieler=input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n")
+    while True:
+        try:
+            anzahl_spieler=int(input('Bitte geben Sie an, wie viele Personen am Bingospiel teilnehmen möchten!'+ "\n"))
+            break
+        except ValueError:
+            restart()
+
+
     for x in range(0,int(anzahl_spieler)):
         spielfeld.append(Karte_Erstellen(höhe,breite,liste))
     if höhe == 3 & breite == 3:
@@ -187,7 +204,7 @@ elif modi == 2:
 
 
 
-
+    #Karten werden basierend auf der Anzahl der Spieler exportiert (Exportfunktion)
     for x in range(0,int(anzahl_spieler)):
         f = open("Karte"+str(x+1), 'w')#karten erzeugt
         Karte=spielfeld[x]
@@ -200,16 +217,16 @@ elif modi == 2:
         for Zahl in Karte:
             for Zahl in range(0,1):
                 t.del_row(Zahl)
-
-
-
+        
         f.close
-
+    
+    
     print("""
-Es wurden """ + anzahl_spieler + """ Bingo Karten generiert und in dem Verzeichnis gespeichert, wo sich das Projekt befindet.
-Das Spiel wird automatisch beendet.""")
+Es wurden """ + str(anzahl_spieler) + """ Bingo Karten generiert und in dem Verzeichnis gespeichert, wo sich das Projekt befindet.
+""")
 
     quit()
+    #Spiel wird beendet, nachdem die Karten exportiert wurden. 
 
 
 elif modi != 1 or 2:
@@ -219,14 +236,12 @@ elif modi != 1 or 2:
     restart() 
 
 
-
-
 print('''
 Viel spaß beim Spielen wünschen euch Fuat, Duc und Niraj :)
 ''')
 
+#Einzelspielermodus Gewinnbekanntgabe mit Detail(wie viele Wörter gezogen wurden)
 sieg = False
-
 
 for x in range(0,int(anzahl_spieler)):
 
@@ -236,24 +251,26 @@ for x in range(0,int(anzahl_spieler)):
         while not sieg and wort_eingabe != "exit":
             wort_eingabe = gezogenes_wort(spielfeld[x], liste, wort_eingabe)
             words_till_win += 1
-
+            #Solange das Spiel noch nicht gewonnen ist, wird jedes eingegebene Wort mitgezählt
 
             print(f"\nGeschriebenes Wort: {wort_eingabe}.")
             print(f"Anzahl der eingegeben Wörtern: {words_till_win}.\n")
             Karte_Ausgeben(spielfeld[x])
 
+            #Gewinn wird überprüft, wenn True --> Laufschrift
             sieg=Prüfen(spielfeld[x],int(höhe),int(breite))
 
-
+            #Laufschrift bei Sieg
             if sieg==True:
-                #print("\033[1;35;40m\n")
-                print("\033[1;35;40m\n"+'\033[35m'+f"\nSie haben Gewonnen!\nSoviele Wörter wurden gezogen: {words_till_win}."+'\033[39m' + "\033[1;35;40m\n")
-                APP_TITLE = "TkTemplate_Idiom_01"
-                APP_XPOS = 300
-                APP_YPOS = 300
-                APP_WIDTH = 300
-                APP_HEIGHT = 300
-                SCROLL_TEXT = "GLÜCKWUNSCH! Sie haben GEWONNEN!"
+                
+                print("\033[1;35;40m\n"+'\033[35m'+f"\nSie haben Gewonnen!\nSoviele Wörter wurden eingegeben: {words_till_win}."+
+                '\033[39m' + "\033[1;35;40m\n")
+                APP_TITEL = "LAUFSCHRIFT - GEWINN"
+                xposition = 300
+                yposition = 300
+                weite_fenster = 300
+                höhe_fenster = 300
+                SCROLLEN_TEXT = "GLÜCKWUNSCH! Sie haben GEWONNEN!"
 
                 class Application(tk.Frame):
 
@@ -264,30 +281,30 @@ for x in range(0,int(anzahl_spieler)):
                         self.canvas = tk.Canvas(self, bg='cyan', highlightthickness=0)
                         self.canvas.pack(expand=True)
 
-                        xpos = APP_WIDTH
+                        xpos = weite_fenster
                         ypos = 100
-                        self.canvas.create_text(xpos, ypos, anchor='w', text=SCROLL_TEXT,
+                        self.canvas.create_text(xpos, ypos, anchor='w', text=SCROLLEN_TEXT,
                             font=('Helvetica 30 bold'), tags='text')
 
-                        text_begin = self.canvas.bbox('text')[0]
-                        text_end = self.canvas.bbox('text')[2]
-                        self.text_length = text_end - text_begin
+                        text_anfang = self.canvas.bbox('text')[0]
+                        text_ende = self.canvas.bbox('text')[2]
+                        self.text_länge = text_ende - text_anfang
 
                         self.scroll_text()
 
                     def scroll_text(self):
                         self.canvas.move('text', -2, 0)
-                        text_end = self.canvas.bbox('text')[2]
-                        if text_end < 0:
-                            self.canvas.move('text', APP_WIDTH + self.text_length, 0)
+                        text_ende = self.canvas.bbox('text')[2]
+                        if text_ende < 0:
+                            self.canvas.move('text', weite_fenster + self.text_length, 0)
 
                         self.canvas.after(20, self.scroll_text)
 
                 def anwenden():
                     app_win = tk.Tk()
-                    app_win.title(APP_TITLE)
-                    app_win.geometry("+{}+{}".format(APP_XPOS, APP_YPOS))
-                    app_win.geometry("{}x{}".format(APP_WIDTH, APP_HEIGHT))
+                    app_win.title(APP_TITEL)
+                    app_win.geometry("+{}+{}".format(xposition, yposition))
+                    app_win.geometry("{}x{}".format(weite_fenster, höhe_fenster))
 
                     app = Application(app_win).pack(fill='both', expand=True, padx=0, pady=0)
 
@@ -296,5 +313,5 @@ for x in range(0,int(anzahl_spieler)):
                 if __name__ == '__main__':
                     anwenden()
                 beenden()
+
             wort_eingabe = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
-        
