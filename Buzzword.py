@@ -137,7 +137,7 @@ Fuat, Duc und Niraj                                            __/ |
                                                               |___/       """+'\033[49m')   
 
 #Textdatei wird ausgelesen, Wörter werde in der Datei mit ";" getrennt
-datei = open('woerter.txt','r')
+datei = open('wörter.txt','r')
 liste=[]
 liste = datei.read().split(';')
 
