@@ -135,7 +135,7 @@ print('\033[40m'+
 |____/ \__,_/___/___|  \_/\_/ \___/|_|  \__,_| |____/|_|_| |_|\__, |\___/ 
 Fuat, Duc und Niraj                                            __/ |      
                                                               |___/       """+'\033[49m') 
-print('\033[40m'+'\033[31m' +"Bitte achten sie darauf, dass es in diesem Spiel auch Audio Dateien enthalten sind und verringern sie ihre Lautstärke je nach wunsch" + '\033[39m' + '\033[49m')  
+print('\033[40m'+'\033[31m' +"In diesem Spiel sind Audiodateien enthalten. Bitte Lautstärke regulieren! " )
 
 #Textdatei wird ausgelesen, Wörter werde in der Datei mit ";" getrennt
 datei = open('wörter.txt','r')
