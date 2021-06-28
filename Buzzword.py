@@ -207,7 +207,7 @@ elif modi == 2:
 
     print("""
 Es wurden """ + anzahl_spieler + """ Bingo Karten generiert und in dem Verzeichnis gespeichert, wo sich das Projekt befindet.
-Schreiben sie "exit" um das Spiel zu beenden.""")
+Das Spiel wird automatisch beendet.""")
 
     quit()
 
