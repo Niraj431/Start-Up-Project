@@ -9,7 +9,7 @@ init(autoreset=True)
 from playsound import playsound
 
 
-def Karte_Erstellen(höhe,breite,liste):
+def Karte_Erstellen(breite,liste):
                 
         Karte = {}
         
@@ -18,10 +18,10 @@ def Karte_Erstellen(höhe,breite,liste):
             
         for Zahl in Karte:
             if Zahl == '3':
-                if höhe == 5:
+                if breite == 5:
                     Karte[Zahl][0][2] = "X"
             elif Zahl == '4':
-                if höhe == 7:
+                if breite == 7:
                     Karte[Zahl][0][3] = "X"
         return Karte
 
