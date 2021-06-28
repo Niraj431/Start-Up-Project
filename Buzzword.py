@@ -314,4 +314,4 @@ for x in range(0,int(anzahl_spieler)):
                     anwenden()
                 beenden()
 
-            wort_eingabe = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n")
+            wort_eingabe = input("Bitte geben sie das Wort ein was sie Markiert haben wollen" + "\n") 
