@@ -177,7 +177,7 @@ spielfeld=[]
 
 #Spielstart im Eizelspielermodus
 if modi == 1:
-    einzelspieler = Karte_Erstellen(höhe,breite,liste)
+    einzelspieler = Karte_Erstellen(breite,liste)
     spielfeld.append(einzelspieler)
     anzahl_spieler = 1
     for x in range(0,anzahl_spieler):
@@ -194,7 +194,7 @@ elif modi == 2:
 
 
     for x in range(0,int(anzahl_spieler)):
-        spielfeld.append(Karte_Erstellen(höhe,breite,liste))
+        spielfeld.append(Karte_Erstellen(breite,liste))
     if höhe == 3 & breite == 3:
         t = PrettyTable(['1', '2', '3'])
     elif höhe == 5 & breite == 5:
