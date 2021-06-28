@@ -10,18 +10,18 @@ from playsound import playsound
 
 
 def Karte_Erstellen(höhe,breite,liste):
-        Karte = { 
-
-            }
-        for x in range(0,höhe):
-            Karte[str(x+1)]=[random.sample(liste,k=breite)]
+                
+        Karte = {}
+        
+        for elem in range(0,breite):
+            Karte[str(elem+1)]=[random.sample(liste,k=breite)]
             
         for Zahl in Karte:
-            if Zahl =='3':
-                if höhe==5 and breite==5:
+            if Zahl == '3':
+                if höhe == 5:
                     Karte[Zahl][0][2] = "X"
-            elif Zahl=='4':
-                if höhe==7 and breite==7:
+            elif Zahl == '4':
+                if höhe == 7:
                     Karte[Zahl][0][3] = "X"
         return Karte
 
